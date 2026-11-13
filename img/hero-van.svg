@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 250" role="img" aria-labelledby="t">
+  <title id="t">Yuk mashinasi qutilar bilan yo'lga chiqmoqda</title>
+  <!-- yo'l -->
+  <rect x="0" y="206" width="560" height="30" rx="15" fill="#e3e6df"/>
+  <path d="M24 221h40M104 221h40M184 221h40M264 221h40M344 221h40M424 221h40M504 221h32" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- qutilar (yuklanmoqda) -->
+  <g stroke="#18212b" stroke-width="3" stroke-linejoin="round">
+    <rect x="22" y="146" width="62" height="58" rx="4" fill="#e9c27a"/>
+    <path d="M53 146v18" stroke="#c98a00"/>
+    <rect x="90" y="166" width="44" height="38" rx="4" fill="#efd3a0"/>
+    <path d="M112 166v12" stroke="#c98a00"/>
+    <rect x="34" y="104" width="40" height="40" rx="4" fill="#efd3a0"/>
+    <path d="M54 104v12" stroke="#c98a00"/>
+  </g>
+
+  <!-- furgon -->
+  <g stroke="#18212b" stroke-width="3.5" stroke-linejoin="round">
+    <path d="M170 84h196a10 10 0 0 1 10 10v104H160V94a10 10 0 0 1 10-10z" fill="#ffffff"/>
+    <path d="M376 112h62c8 0 14 4 18 10l30 40c4 5 6 10 6 16v20H376z" fill="#ffffff"/>
+    <path d="M392 124h44l26 36h-70z" fill="#cfe0fa"/>
+    <path d="M160 170h332" stroke-width="3"/>
+  </g>
+  <!-- uch tuman chizig'i -->
+  <rect x="176" y="128" width="184" height="8" rx="4" fill="#2a6fdb"/>
+  <rect x="176" y="142" width="184" height="8" rx="4" fill="#c98a00"/>
+  <rect x="176" y="156" width="184" height="8" rx="4" fill="#8e44ad"/>
+  <rect x="482" y="176" width="12" height="10" rx="3" fill="#f2b705" stroke="#18212b" stroke-width="2.5"/>
+
+  <!-- g'ildiraklar -->
+  <g stroke="#18212b" stroke-width="3.5">
+    <circle cx="214" cy="200" r="24" fill="#18212b"/>
+    <circle cx="214" cy="200" r="9" fill="#d9ddd5"/>
+    <circle cx="430" cy="200" r="24" fill="#18212b"/>
+    <circle cx="430" cy="200" r="9" fill="#d9ddd5"/>
+  </g>
+</svg>

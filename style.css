@@ -63,6 +63,13 @@ h2 { font-size: 1.25rem; line-height: 1.3; font-weight: 650; }
 }
 .lead { margin-top: 16px; color: var(--muted); font-size: 1.125rem; max-width: 42ch; }
 
+.hero-van { display: block; width: min(100%, 520px); height: auto; margin-top: 28px; }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-van { animation: drive-in 1.1s cubic-bezier(.2, .8, .2, 1) both .15s; }
+  @keyframes drive-in { from { opacity: 0; transform: translateX(-60px); } }
+}
+.empty-art { display: block; width: 180px; height: auto; margin: 0 auto 12px; }
+
 /* ---------- Scheme ---------- */
 .scheme { margin: 0; }
 .scheme svg { width: 100%; height: auto; display: block; overflow: visible; }
@@ -129,22 +136,51 @@ h2 { font-size: 1.25rem; line-height: 1.3; font-weight: 650; }
 }
 .trips { list-style: none; margin: 0; padding: 0; }
 
-/* ---------- Trip row ---------- */
+/* ---------- Trip row: 3D karta ---------- */
+.trips { display: grid; gap: 14px; perspective: 1000px; }
 .trip {
   display: grid;
-  grid-template-columns: 76px minmax(0, 1fr) auto;
-  gap: 16px;
+  grid-template-columns: 76px minmax(0, 1fr) 112px auto;
+  gap: 18px;
   align-items: center;
-  padding: 16px 12px 16px 4px;
-  border-bottom: 1px solid var(--rule);
+  padding: 18px 20px 18px 24px;
   position: relative;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-m);
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform .45s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease;
+  box-shadow:
+    0 1px 0 #fff inset,
+    0 1px 2px rgba(24, 33, 43, .06),
+    0 6px 14px -6px rgba(24, 33, 43, .14);
 }
+.trip.tilting {
+  transition: transform .08s linear, box-shadow .3s ease;
+  box-shadow:
+    0 1px 2px rgba(24, 33, 43, .06),
+    0 22px 40px -18px rgba(24, 33, 43, .35);
+}
+/* yaltirash */
+.trip::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .55), transparent 45%);
+  opacity: 0; transition: opacity .3s ease;
+}
+.trip.tilting::after { opacity: 1; }
+/* tuman rangidagi chet */
 .trip::before {
-  content: ""; position: absolute; left: -12px; top: 12px; bottom: 12px; width: 4px;
-  border-radius: 4px; background: var(--c); opacity: 0; transition: opacity .2s ease;
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
+  border-radius: var(--radius-m) 0 0 var(--radius-m); background: var(--c);
 }
-.trip.selected::before { opacity: 1; }
-.trip.selected { background: var(--surface); }
+.trip.selected { border-color: var(--c); box-shadow: 0 0 0 2px var(--c), 0 18px 34px -20px rgba(24, 33, 43, .4); }
+
+/* qatlamlar oldinga chiqadi */
+.trip-time, .trip > div:nth-child(2) { transform: translateZ(28px); }
+.trip-art { transform: translateZ(46px); color: var(--c); }
+.trip .pick { transform: translateZ(36px); }
+.trip-art svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 8px 6px rgba(24, 33, 43, .18)); }
 
 .trip-time { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
 
@@ -182,6 +218,7 @@ h2 { font-size: 1.25rem; line-height: 1.3; font-weight: 650; }
   border: 1px solid var(--rule);
   border-radius: var(--radius-m);
   padding: 22px;
+  box-shadow: 0 1px 2px rgba(24, 33, 43, .06), 0 18px 36px -24px rgba(24, 33, 43, .35);
 }
 .sheet h2 { margin-bottom: 14px; }
 .muted { color: var(--muted); }
@@ -224,8 +261,8 @@ textarea { resize: vertical; min-height: 92px; }
 .note { color: var(--muted); font-size: .875rem; margin-bottom: 16px; }
 
 @media (prefers-reduced-motion: no-preference) {
-  .receipt:not([hidden]) { animation: settle .45s cubic-bezier(.2, .8, .2, 1); }
-  @keyframes settle { from { opacity: 0; transform: translateY(8px); } }
+  .receipt:not([hidden]) { animation: flip-in .6s cubic-bezier(.2, .8, .2, 1); transform-origin: top center; }
+  @keyframes flip-in { from { opacity: 0; transform: perspective(900px) rotateX(-28deg) translateY(10px); } }
 }
 
 /* ---------- History ---------- */
@@ -254,10 +291,9 @@ textarea { resize: vertical; min-height: 92px; }
   .hero { padding-top: 28px; }
   .filter-bar { margin-top: 8px; }
   .filters { width: 100%; }
-  .trip { grid-template-columns: 62px minmax(0, 1fr); padding-right: 0; }
-  .trip-time { font-size: 1.25rem; }
+  .trip { grid-template-columns: 58px minmax(0, 1fr) 72px; gap: 12px; padding: 16px 14px 16px 18px; }
+  .trip-time { font-size: 1.2rem; }
   .trip .pick { grid-column: 1 / -1; width: 100%; }
-  .trip::before { left: -8px; }
   .sheet { padding: 18px; }
   .confirm { grid-template-columns: 1fr; gap: 2px; }
   .confirm dd { margin-bottom: 8px; }

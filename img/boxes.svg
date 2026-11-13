@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150" role="img" aria-labelledby="t">
+  <title id="t">Jo'natishga tayyor qutilar</title>
+  <ellipse cx="120" cy="138" rx="104" ry="9" fill="#e3e6df"/>
+  <g stroke="#18212b" stroke-width="3" stroke-linejoin="round">
+    <path d="M46 70l44-18 44 18v62l-44 0-44 0z" fill="#efd3a0"/>
+    <path d="M46 70l44 16 44-16" fill="none"/>
+    <path d="M90 86v46"/>
+    <path d="M68 61l44 17" stroke="#c98a00"/>
+    <rect x="140" y="88" width="56" height="44" rx="4" fill="#e9c27a"/>
+    <path d="M168 88v14" stroke="#c98a00"/>
+    <rect x="150" y="48" width="38" height="38" rx="4" fill="#efd3a0"/>
+    <path d="M169 48v11" stroke="#c98a00"/>
+  </g>
+  <g fill="none" stroke="#2a6fdb" stroke-width="3" stroke-linecap="round">
+    <path d="M24 40c10-12 26-16 40-10"/>
+    <path d="M58 24l7 6-9 3"/>
+  </g>
+</svg>

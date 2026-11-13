@@ -47,6 +47,37 @@ function el(tag, className, text) {
   return node;
 }
 
+// Kartadagi kichik furgon rasmi (rangi tuman rangiga mos: currentColor)
+const VAN_SVG = `<svg viewBox="0 0 120 64"><g stroke="#18212b" stroke-width="3" stroke-linejoin="round">
+<path d="M8 10h60a5 5 0 0 1 5 5v36H4V14a4 4 0 0 1 4-4z" fill="#fff"/>
+<path d="M73 22h20c3 0 5 1 7 3l10 13c1 2 2 4 2 6v7H73z" fill="#fff"/>
+<path d="M79 27h13l9 12H79z" fill="#cfe0fa"/></g>
+<rect x="10" y="30" width="56" height="7" rx="3.5" fill="currentColor"/>
+<g stroke="#18212b" stroke-width="3"><circle cx="24" cy="52" r="8" fill="#18212b"/><circle cx="94" cy="52" r="8" fill="#18212b"/></g></svg>`;
+
+// 3D effekt: kartani sichqoncha tomonga engashtirish (faqat sichqonchali qurilmalarda)
+const canTilt = window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
+  !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function add3dTilt(card) {
+  if (!canTilt) return;
+  card.addEventListener("pointermove", (e) => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const y = (e.clientY - r.top) / r.height;
+    card.style.setProperty("--ry", `${(x - 0.5) * 8}deg`);
+    card.style.setProperty("--rx", `${(0.5 - y) * 10}deg`);
+    card.style.setProperty("--mx", `${x * 100}%`);
+    card.style.setProperty("--my", `${y * 100}%`);
+    card.classList.add("tilting");
+  });
+  card.addEventListener("pointerleave", () => {
+    card.style.setProperty("--rx", "0deg");
+    card.style.setProperty("--ry", "0deg");
+    card.classList.remove("tilting");
+  });
+}
+
 function loadRequests() {
   try {
     const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -131,6 +162,12 @@ function tripRow(t) {
   info.appendChild(r);
   info.appendChild(el("div", "trip-id", `Qatnov ${t.id}`));
   li.appendChild(info);
+
+  const art = el("div", "trip-art");
+  art.setAttribute("aria-hidden", "true");
+  art.innerHTML = VAN_SVG;
+  li.appendChild(art);
+  add3dTilt(li);
 
   const btn = el("button", "btn pick", selectedTrip && selectedTrip.id === t.id ? "Tanlangan" : "Tanlash");
   btn.type = "button";
