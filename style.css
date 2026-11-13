@@ -745,3 +745,14 @@ label .ic { color: var(--accent); }
 .trip-id .ic { color: var(--c); }
 .pick .ic { transition: translate .25s var(--ease-out); }
 .trip:hover .pick .ic { translate: 4px 0; }
+
+/* Admin: qabul qilish / rad etish */
+.cell-decide { white-space: nowrap; }
+.cell-decide .btn { min-height: 44px; padding: 8px 16px; margin-right: 8px; border: 1px solid; background: transparent; }
+.btn-accept { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 55%, transparent); }
+.btn-accept:hover:not(:disabled) { background: var(--ok); color: #04130a; }
+.btn-reject { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 55%, transparent); }
+.btn-reject:hover:not(:disabled) { background: var(--danger); color: #1c0606; }
+.cell-decide .btn:disabled { opacity: .35; cursor: default; }
+.admin-table .chip { margin: 0; }
+@media (max-width: 900px) { .cell-decide { white-space: normal; } .cell-decide .btn { margin-top: 6px; } }

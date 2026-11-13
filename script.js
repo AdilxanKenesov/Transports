@@ -577,6 +577,9 @@ if ("IntersectionObserver" in window && !reducedMotion) {
   document.querySelectorAll(".offers").forEach((n) => { n.classList.add("reveal"); io.observe(n); });
 }
 
+// Sahifa yangilanganda sayt bosh ekrandan boshlanadi
+if (location.hash && location.hash !== "#/") history.replaceState(null, "", location.pathname + location.search);
+
 applyStaticTexts();
 renderAll();
 showScreen(parseRoute(), false);
@@ -590,7 +593,6 @@ Api.init().then(async (u) => {
 });
 
 /* ---------- Kirish oynasi: sayt haqida 3 slayd (birinchi kirishda ochiladi) ---------- */
-const INTRO_KEY = "bilet006_intro";
 const introEl = $("intro");
 let introStep = 1;
 
@@ -645,7 +647,6 @@ function closeIntro() {
   if (introEl.hidden) return;
   introEl.hidden = true;
   pageParts().forEach((n) => { n.inert = false; });
-  try { localStorage.setItem(INTRO_KEY, "1"); } catch {}
   $("aboutBtn").focus({ preventScroll: true });
 }
 
@@ -666,7 +667,8 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowLeft" && introStep > 1) { introStep--; renderIntro("prev"); }
 });
 
-if (!localStorage.getItem(INTRO_KEY)) openIntro();
+// Har safar sahifa ochilganda (yangilanganda ham) kirish oynasi chiqadi
+openIntro();
 
 /* =====================================================================
    Hisob (kirish / ro'yxatdan o'tish / demo) va admin panel

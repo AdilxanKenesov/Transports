@@ -108,26 +108,32 @@ function render() {
 
     const st = el("td");
     st.dataset.label = t("admin.col.status");
-    const sel = el("select", "status-select st-" + r.status);
-    sel.setAttribute("aria-label", t("admin.statusAria", { id: r.tripId }));
-    ["new", "accepted", "rejected"].forEach((v) => {
-      const o = el("option", "", t("status." + v));
-      o.value = v;
-      o.selected = v === r.status;
-      sel.appendChild(o);
-    });
-    sel.addEventListener("change", async () => {
-      sel.disabled = true;
+    st.appendChild(el("span", "chip st-" + r.status, t("status." + r.status)));
+    tr.appendChild(st);
+
+    // Qabul qilish / rad etish
+    const setStatus = async (status, btn) => {
+      btn.disabled = true;
       try {
-        await Api.setStatus(r.id, sel.value);
-        r.status = sel.value;
+        await Api.setStatus(r.id, status);
+        r.status = status;
       } catch (ex) {
         $("adminError").textContent = apiMessage(ex);
       }
       render();
+    };
+    const decide = el("td", "cell-decide");
+    [["accepted", "admin.accept", "i-check", "btn-accept"], ["rejected", "admin.reject", "i-x", "btn-reject"]].forEach(([status, key, icon, cls]) => {
+      const b = el("button", "btn " + cls);
+      b.type = "button";
+      b.innerHTML = `<svg class="ic" aria-hidden="true"><use href="#${icon}"/></svg>`;
+      b.appendChild(el("span", "", t(key)));
+      b.setAttribute("aria-label", `${t(key)}: ${r.tripId}, ${r.cargo}`);
+      b.disabled = r.status === status;
+      b.addEventListener("click", () => setStatus(status, b));
+      decide.appendChild(b);
     });
-    st.appendChild(sel);
-    tr.appendChild(st);
+    tr.appendChild(decide);
 
     const act = el("td", "cell-act");
     const del = el("button", "btn quiet", t("mine.delete"));

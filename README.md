@@ -18,7 +18,7 @@ Admin sayti: http://localhost:3000/admin.html
 | `server.js` | Backend: hisoblar, sessiyalar, so'rovlar (`data/db.json`) |
 
 ## Ekranlar
-1. **Kirish oynasi** — birinchi kirishda to'liq ekranli 3 slayd: sayt nima uchun kerakligi (menyudagi "Sayt haqida" qayta ochadi).
+1. **Kirish oynasi** — sahifa har ochilganda (yangilanganda ham) to'liq ekranli 3 slayd: sayt nima uchun kerakligi. "O'tkazib yuborish" bilan yopiladi; sayt bosh ekrandan boshlanadi.
 2. **Bosh sahifa** — sarlavha, yaqin qatnovlar tablosi, tumanlar bo'yicha taklif kartalari.
 3. **Qatnovlar** — hudud bo'yicha filtr va 5 ta qatnov.
 4. **Kirish / ro'yxatdan o'tish** — faqat so'rov yuborishga o'tilganda so'raladi; kirgach tanlangan qatnovga qaytadi. "Demo mijoz" tugmasi bir bosishda kiritadi.
@@ -29,7 +29,7 @@ Admin sayti: http://localhost:3000/admin.html
 ## Backend va xavfsizlik
 - Ro'yxatdan o'tish, kirish, chiqish; parollar scrypt bilan hash qilinadi; sessiya HttpOnly cookie'da.
 - Har bir mijoz faqat o'z so'rovlarini oladi va o'chira oladi; admin bo'limlari faqat admin uchun.
-- Admin paneli: barcha so'rovlar, holatni o'zgartirish (Yangi / Qabul qilindi / Rad etildi), o'chirish, foydalanuvchilar ro'yxati.
+- Admin paneli: barcha so'rovlar, har bir so'rovni "Qabul qilish" yoki "Rad etish" tugmasi bilan hal qilish, o'chirish, foydalanuvchilar ro'yxati.
 - Sinov hisoblari: `demo` / `demo123` (mijoz), `admin` / `admin123` (admin). Bu faqat namoyish uchun: haqiqiy ishga tushirishda `ADMIN_PASSWORD=...` va `DEMO=0` bilan ishga tushiring.
 
 ## Talablar va bajarilishi
