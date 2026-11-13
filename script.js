@@ -109,72 +109,49 @@ function withTransition(update, dir) {
   return vt.finished.catch(() => {}).then(() => { delete root.dataset.dir; });
 }
 
-const VAN_SVG = `<svg viewBox="0 0 120 64"><g stroke="#18212b" stroke-width="3" stroke-linejoin="round">
-<path d="M8 10h60a5 5 0 0 1 5 5v36H4V14a4 4 0 0 1 4-4z" fill="#fff"/>
-<path d="M73 22h20c3 0 5 1 7 3l10 13c1 2 2 4 2 6v7H73z" fill="#fff"/>
-<path d="M79 27h13l9 12H79z" fill="#cfe0fa"/></g>
-<rect x="10" y="30" width="56" height="7" rx="3.5" fill="currentColor"/>
-<g stroke="#18212b" stroke-width="3"><circle cx="24" cy="52" r="8" fill="#18212b"/><circle cx="94" cy="52" r="8" fill="#18212b"/></g></svg>`;
-
-/* ---------- Qatnovlar sxemasi ---------- */
-const NODES = { hub: [56, 125, 17], A: [238, 42, 14], B: [362, 125, 14], C: [238, 208, 14] };
-const NODE_LABEL = { hub: [56, 168], A: [238, 16], B: [362, 160], C: [238, 243] };
-const EDGE_LABEL = { Y01: [128, 68], Y02: [190, 146], Y03: [316, 70], Y04: [316, 192], Y05: [198, 104] };
-
-function schemeSVG() {
-  let edges = "";
-  TRIPS.forEach((trip, i) => {
-    const [x1, y1, r1] = NODES[trip.from];
-    const [x2, y2, r2] = NODES[trip.to];
-    const len = Math.hypot(x2 - x1, y2 - y1);
-    const ux = (x2 - x1) / len, uy = (y2 - y1) / len;
-    const sx = x1 + ux * (r1 + 5), sy = y1 + uy * (r1 + 5);
-    const tx = x2 - ux * (r2 + 6), ty = y2 - uy * (r2 + 6);
-    const ang = (Math.atan2(uy, ux) * 180) / Math.PI;
-    const [lx, ly] = EDGE_LABEL[trip.id];
-    edges += `<g class="edge" data-to="${trip.to}" style="--c:${LINE_COLOR[trip.to]};--i:${i}">
-      <line x1="${sx}" y1="${sy}" x2="${tx - ux * 9}" y2="${ty - uy * 9}" pathLength="1"/>
-      <polygon points="0,0 -14,-7 -14,7" transform="translate(${tx} ${ty}) rotate(${ang})"/>
-      <text x="${lx}" y="${ly}">${trip.id}</text></g>`;
-  });
-  let nodes = "";
-  Object.keys(NODES).forEach((k, i) => {
-    const [x, y, r] = NODES[k];
-    const [lx, ly] = NODE_LABEL[k];
-    const interactive = k !== "hub";
-    nodes += `<g class="node${k === "hub" ? " hub" : ""}" style="--i:${i}${interactive ? `;--c:${LINE_COLOR[k]}` : ""}"
-      ${interactive ? `data-place="${k}" tabindex="0" role="button" aria-label="${t("scheme.to", { place: place(k) })}"` : ""}>
-      <circle class="hit" cx="${x}" cy="${y}" r="${r + 14}"/><circle class="dot" cx="${x}" cy="${y}" r="${r}"/>
-      <text x="${lx}" y="${ly}" text-anchor="middle">${place(k)}</text></g>`;
-  });
-  return `<svg viewBox="0 0 420 250"><g class="edges">${edges}</g><g class="nodes">${nodes}</g></svg>
-    <figcaption>${t("scheme.caption")}</figcaption>`;
+/* ---------- Bosh sahifadagi tablo (yaqin qatnovlar lentasi) ---------- */
+function renderTicker() {
+  const box = $("ticker");
+  box.innerHTML = "";
+  for (let copy = 0; copy < 2; copy++) {
+    const ul = el("ul", "ticker-set");
+    if (copy) ul.setAttribute("aria-hidden", "true");
+    TRIPS.forEach((trip) => {
+      const li = el("li");
+      li.style.setProperty("--c", LINE_COLOR[trip.to]);
+      li.appendChild(el("span", "tk-time", trip.time));
+      li.appendChild(el("span", "tk-route", route(trip)));
+      li.appendChild(el("span", "tk-day", t("day." + trip.date)));
+      ul.appendChild(li);
+    });
+    box.appendChild(ul);
+  }
 }
 
-function renderSchemes() {
-  document.querySelectorAll(".scheme").forEach((fig) => {
-    fig.innerHTML = schemeSVG();
-    fig.querySelectorAll(".node[data-place]").forEach((n) => {
-      const pick = () => {
-        setFilter(n.dataset.place, current.name === "trips");
-        if (current.name !== "trips") location.hash = "#/trips";
-      };
-      n.addEventListener("click", pick);
-      n.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); }
-      });
+/* ---------- Qadamlar ko'rsatkichi: 1 Qatnov → 2 Yuk → 3 Tasdiq ---------- */
+function renderSteppers() {
+  document.querySelectorAll(".stepper").forEach((ol) => {
+    const now = Number(ol.dataset.step);
+    ol.innerHTML = "";
+    ol.setAttribute("aria-label", t("stepper.label"));
+    [1, 2, 3].forEach((i) => {
+      const li = el("li", i < now ? "done" : i === now ? "now" : "");
+      if (i === now) li.setAttribute("aria-current", "step");
+      li.appendChild(el("span", "num", String(i)));
+      li.appendChild(el("span", "lbl", t("step." + i)));
+      ol.appendChild(li);
     });
   });
-  highlightSchemes();
 }
 
-function highlightSchemes() {
-  const all = currentFilter === "all";
-  const figTrips = $("schemeTrips");
-  figTrips.classList.toggle("filtered", !all);
-  figTrips.querySelectorAll(".edge").forEach((e) => e.classList.toggle("on", !all && e.dataset.to === currentFilter));
-  figTrips.querySelectorAll(".node[data-place]").forEach((n) => n.classList.toggle("on", !all && n.dataset.place === currentFilter));
-}
+// Sichqoncha ostidagi yorug'lik dog'i (shisha kartalarda)
+document.addEventListener("pointermove", (e) => {
+  const g = e.target.closest && e.target.closest(".glow");
+  if (!g) return;
+  const r = g.getBoundingClientRect();
+  g.style.setProperty("--mx", `${e.clientX - r.left}px`);
+  g.style.setProperty("--my", `${e.clientY - r.top}px`);
+});
 
 /* ---------- Talab 2: yetib borish hududi bo'yicha tanlov ---------- */
 function setFilter(f, animate) {
@@ -184,7 +161,6 @@ function setFilter(f, animate) {
   const update = () => {
     renderFilters();
     renderTrips(animate);
-    highlightSchemes();
   };
   if (!animate) return update();
   // Kartalar o'z joyiga silliq siljishi uchun har biriga nom beramiz
@@ -242,61 +218,32 @@ function renderTrips(keepNames) {
 }
 
 function tripCard(trip) {
-  const li = el("li", "trip");
+  const li = el("li", "trip glow");
   li.dataset.id = trip.id;
   li.style.setProperty("--c", LINE_COLOR[trip.to]);
 
   li.appendChild(el("div", "trip-time", trip.time));
 
-  const info = el("div", "trip-info");
-  const r = el("ul", "route");
-  r.setAttribute("aria-label", route(trip));
-  r.appendChild(el("li", "from", place(trip.from)));
-  r.appendChild(el("li", "to", place(trip.to)));
-  info.appendChild(r);
-  info.appendChild(el("div", "trip-id", t("trip.n", { id: trip.id })));
-  li.appendChild(info);
+  const r = el("div", "trip-route");
+  r.appendChild(el("span", "from", place(trip.from)));
+  const line = el("span", "line");
+  line.setAttribute("aria-hidden", "true");
+  r.appendChild(line);
+  r.appendChild(el("span", "to", place(trip.to)));
+  li.appendChild(r);
 
-  const art = el("div", "trip-art");
-  art.setAttribute("aria-hidden", "true");
-  art.innerHTML = VAN_SVG;
-  li.appendChild(art);
+  li.appendChild(el("div", "trip-id", t("trip.n", { id: trip.id })));
 
   const btn = el("button", "btn pick", t("trip.pick"));
   btn.type = "button";
   btn.setAttribute("aria-label", t("trip.pickAria", { id: trip.id, route: route(trip), when: when(trip) }));
   btn.addEventListener("click", () => {
     // Karta so'rov sahifasidagi chiptaga "aylanadi"
-    li.style.transform = "none";
     li.style.viewTransitionName = "ticket";
     location.hash = "#/request/" + trip.id;
   });
   li.appendChild(btn);
-
-  add3dTilt(li);
   return li;
-}
-
-// 3D effekt: kartani sichqoncha tomonga engashtirish (faqat sichqonchali qurilmalarda)
-const canTilt = window.matchMedia("(hover: hover) and (pointer: fine)").matches && !reducedMotion;
-
-function add3dTilt(card) {
-  if (!canTilt) return;
-  card.addEventListener("pointermove", (e) => {
-    const r = card.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width;
-    const y = (e.clientY - r.top) / r.height;
-    card.style.setProperty("--ry", `${(x - 0.5) * 8}deg`);
-    card.style.setProperty("--rx", `${(0.5 - y) * 10}deg`);
-    card.style.setProperty("--mx", `${x * 100}%`);
-    card.style.setProperty("--my", `${y * 100}%`);
-    card.classList.add("tilting");
-  });
-  card.addEventListener("pointerleave", () => {
-    card.style.setProperty("--rx", "0deg");
-    card.style.setProperty("--ry", "0deg");
-    card.classList.remove("tilting");
-  });
 }
 
 /* ---------- Talab 3: tanlangan qatnov yo'nalishi va vaqti bilan so'rov shakli ---------- */
@@ -316,9 +263,7 @@ function renderTicket(trip) {
 
   const road = el("div", "ticket-road");
   road.setAttribute("aria-hidden", "true");
-  const van = el("span", "ticket-van");
-  van.innerHTML = VAN_SVG;
-  road.appendChild(van);
+  road.appendChild(el("span", "pulse"));
   box.appendChild(road);
 
   const ends = el("div", "ticket-ends");
@@ -462,7 +407,8 @@ function parseRoute() {
 }
 
 function renderAll() {
-  renderSchemes();
+  renderTicker();
+  renderSteppers();
   renderFilters();
   renderTrips();
   renderHistory();
@@ -519,8 +465,8 @@ if ("IntersectionObserver" in window && !reducedMotion) {
     entries.forEach((en) => {
       if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
     });
-  }, { threshold: 0.2 });
-  document.querySelectorAll(".steps-block").forEach((n) => { n.classList.add("reveal"); io.observe(n); });
+  }, { threshold: 0.05 });
+  document.querySelectorAll(".steps").forEach((n) => { n.classList.add("reveal"); io.observe(n); });
 }
 
 applyStaticTexts();

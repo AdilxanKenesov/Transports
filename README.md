@@ -7,7 +7,7 @@ Kichik yukini jo'natmoqchi bo'lgan foydalanuvchiga mos qatnovni topishga yordam 
 
 ## Ekranlar
 Sayt bir nechta ekranga bo'lingan (manzil satridagi `#/...` orqali, brauzerning "orqaga" tugmasi ishlaydi):
-1. **Bosh sahifa** — sarlavha, qatnovlar sxemasi, uch qadam.
+1. **Bosh sahifa** — sarlavha, yaqin qatnovlar tablosi, uch qadam.
 2. **Qatnovlar** — hudud bo'yicha filtr va 5 ta qatnov.
 3. **So'rov** — tanlangan qatnov chiptasi va shakl.
 4. **Tasdiq** — yuborilgan so'rov ma'lumotlari.
@@ -17,7 +17,7 @@ Sayt bir nechta ekranga bo'lingan (manzil satridagi `#/...` orqali, brauzerning 
 | Talab | Saytda |
 |---|---|
 | 1. 5 ta qatnov yo'nalishi va jo'nash vaqti bilan | "Qatnovlar" ekranidagi kartalar: vaqt, "Qayerdan → Qayerga", qatnov ID |
-| 2. "Barchasi", "A tumani", "B tumani", "C tumani" | Yetib borish hududi bo'yicha filtr tugmalari (sxemadagi tumanni bosish ham ishlaydi) |
+| 2. "Barchasi", "A tumani", "B tumani", "C tumani" | Yetib borish hududi bo'yicha filtr tugmalari |
 | 3. Tanlanganda so'rov shakli yo'nalish va vaqt bilan | "Tanlash" → "So'rov" ekrani: chiptada yo'nalish, sana va vaqt |
 | 4. Ism va yuk tavsifi majburiy | Bo'sh yoki faqat bo'shliqli qiymat rad etiladi, xato xabari chiqadi |
 | 5. Tasdiq: qatnov, ism, yuk tavsifi | "So'rov yuborildi" ekrani |
@@ -26,13 +26,15 @@ Sayt bir nechta ekranga bo'lingan (manzil satridagi `#/...` orqali, brauzerning 
 O'zbekcha (asosiy), ruscha, inglizcha — yuqoridagi UZ / RU / EN tugmalari. Tanlangan til brauzerda saqlanadi. Matnlar `i18n.js` faylida.
 
 ## Dizayn va animatsiyalar
-- Qatnovlar sxemasi (metro chizmasi uslubida, xarita emas): bosh sahifada chiziqlar chizilib chiqadi; tuman bosilsa, o'sha yoqqa boradigan qatnovlar ochiladi.
-- Har tumanning o'z rangi: A — ko'k, B — qahrabo, C — binafsha.
+- To'q premium uslub: qora-ko'k fon, sekin suzadigan rangli yog'du, shisha (glass) kartalar, neon chiziqlar.
+- Har tumanning o'z rangi: A — moviy, B — qahrabo, C — binafsha (filtr, kartalar, chipta va tabloda bir xil).
+- Bosh sahifada "Yaqin qatnovlar" tablosi (yurib turadigan lenta) va uch qadam.
+- Qatnov → Yuk → Tasdiq qadamlar ko'rsatkichi.
 - Ekranlar orasida silliq o'tish (View Transitions): tanlangan karta so'rov ekranidagi chiptaga aylanadi; filtr almashganda kartalar o'z joyiga siljiydi.
-- 3D kartalar (sichqoncha tomonga engashadi), chiptada yo'l bo'ylab yuradigan furgon, tasdiqda chizilib chiqadigan belgi.
+- Kartada sichqoncha ostida yorug'lik dog'i va yo'l bo'ylab yuguradigan nur; tasdiqda chizilib chiqadigan belgi.
 - "Kamroq harakat" sozlamasi yoqilgan qurilmalarda barcha animatsiyalar o'chadi.
-- Fon fotosuratlari (Wikimedia Commons, CC BY-SA 4.0): M39 yo'li, Jomboy tumani — Yoshi Canopus; Ko'hitang tog' yo'li — Panpanchik; GM Labo, Toshkent — Jamshid Nurkulov. Mualliflar sayt pastida havolalar bilan ko'rsatilgan.
-- Shrift: Golos Text, lotin va kirill (`fonts/` ichida, internetsiz ishlaydi).
+- Surat faqat bosh sahifada: "Highway light trails at night" — Jamie Street, Wikimedia Commons, CC0 (sayt pastida havola bilan ko'rsatilgan).
+- Shriftlar: Unbounded (sarlavhalar) va Onest (matn), lotin va kirill (`fonts/` ichida, internetsiz ishlaydi).
 
 Qo'shimcha: yuborilgan so'rovlar, tanlangan filtr va til brauzerda (`localStorage`) saqlanadi; telefon ekraniga moslashgan.
 

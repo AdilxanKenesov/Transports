@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Kichik yukingiz uchun viloyat ichidagi mos qatnovni toping va jo'natish so'rovini qoldiring.">
+  <meta name="theme-color" content="#070b14">
   <title>Kichik yuk uchun transport topish</title>
-  <link rel="preload" href="fonts/golos-text-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/unbounded-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/onest-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,7 +16,7 @@
   <header class="nav">
     <div class="wrap nav-in">
       <a class="brand" href="#/">
-        <svg viewBox="0 0 120 64" aria-hidden="true"><g stroke="currentColor" stroke-width="5" stroke-linejoin="round" fill="none"><path d="M8 10h60a5 5 0 0 1 5 5v36H4V14a4 4 0 0 1 4-4z"/><path d="M73 22h20c3 0 5 1 7 3l10 13c1 2 2 4 2 6v7H73z"/></g><circle cx="24" cy="52" r="9" fill="currentColor"/><circle cx="94" cy="52" r="9" fill="currentColor"/></svg>
+        <svg viewBox="0 0 40 24" aria-hidden="true"><path d="M5 18C12 18 12 6 20 6s8 12 15 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="5" cy="18" r="4"/><circle cx="35" cy="18" r="4"/></svg>
         <span data-i18n="brand">Kichik yuk</span>
       </a>
       <nav class="links" data-i18n-aria="nav.label" aria-label="Bo'limlar">
@@ -34,53 +36,45 @@
     <section class="screen" data-screen="home">
       <div class="hero">
         <div class="hero-bg" aria-hidden="true"></div>
-        <div class="wrap hero-grid">
-          <div class="hero-text">
-            <h1 id="heroTitle" tabindex="-1" data-i18n="hero.title" data-split>Kichik yukingizni yo'lga chiqayotgan qatnov bilan jo'nating</h1>
-            <p class="lead" data-i18n="hero.lead">Manzilni tanlang, mos qatnovni belgilang va yuk haqida qisqa yozing.</p>
-            <a class="btn cta" href="#/trips" data-i18n="hero.cta">Qatnovlarni ko'rish</a>
-          </div>
-          <figure class="scheme draw" id="schemeHome"></figure>
+        <div class="wrap hero-in">
+          <h1 id="heroTitle" tabindex="-1" data-i18n="hero.title" data-split>Kichik yukingizni yo'lga chiqayotgan qatnov bilan jo'nating</h1>
+          <p class="lead" data-i18n="hero.lead">Manzilni tanlang, mos qatnovni belgilang va yuk haqida qisqa yozing.</p>
+          <a class="btn primary cta" href="#/trips" data-i18n="hero.cta">Qatnovlarni ko'rish</a>
         </div>
-        <p class="photo-credit" data-i18n="photo.jomboy">M39 yo'li</p>
+        <div class="wrap">
+          <section class="board" aria-labelledby="tickerLabel">
+            <h2 id="tickerLabel" data-i18n="ticker.label">Yaqin qatnovlar</h2>
+            <div class="ticker" id="ticker"></div>
+          </section>
+        </div>
       </div>
 
       <div class="wrap steps-block">
-        <div class="steps-text">
-          <h2 data-i18n="steps.title">Uch qadamda jo'nating</h2>
-          <ol class="steps" id="steps">
-            <li><h3 data-i18n="steps.1t">Manzilni tanlang</h3><p data-i18n="steps.1p">Yuk qaysi tumanga borishini belgilang — ro'yxatda faqat o'sha yoqqa ketadigan qatnovlar qoladi.</p></li>
-            <li><h3 data-i18n="steps.2t">Qatnovni belgilang</h3><p data-i18n="steps.2p">Jo'nash kuni va vaqti sizga mos keladigan qatnovni tanlang.</p></li>
-            <li><h3 data-i18n="steps.3t">Yuk haqida yozing</h3><p data-i18n="steps.3p">Ismingiz va yukning qisqa tavsifi kifoya. So'rov shu zahoti tasdiqlanadi.</p></li>
-          </ol>
-        </div>
-        <img class="steps-photo" src="img/labo-yuk.jpg" width="900" height="810" loading="lazy" data-i18n-alt="photo.laboAlt" alt="Toshkent ko'chasida turgan kichik yuk mashinasi">
+        <h2 data-i18n="steps.title">Uch qadamda jo'nating</h2>
+        <ol class="steps" id="steps">
+          <li class="glow"><h3 data-i18n="steps.1t">Manzilni tanlang</h3><p data-i18n="steps.1p">Yuk qaysi tumanga borishini belgilang — ro'yxatda faqat o'sha yoqqa ketadigan qatnovlar qoladi.</p></li>
+          <li class="glow"><h3 data-i18n="steps.2t">Qatnovni belgilang</h3><p data-i18n="steps.2p">Jo'nash kuni va vaqti sizga mos keladigan qatnovni tanlang.</p></li>
+          <li class="glow"><h3 data-i18n="steps.3t">Yuk haqida yozing</h3><p data-i18n="steps.3p">Ismingiz va yukning qisqa tavsifi kifoya. So'rov shu zahoti tasdiqlanadi.</p></li>
+        </ol>
       </div>
     </section>
 
     <!-- 2. Qatnovlar -->
-    <section class="screen photo" data-screen="trips" hidden>
-      <div class="wrap">
+    <section class="screen pad" data-screen="trips" hidden>
+      <div class="wrap mid">
+        <ol class="stepper" data-step="1"></ol>
         <h1 class="screen-title" tabindex="-1" data-i18n="trips.title">Yuk qayerga borishi kerak?</h1>
         <div class="filters" id="filters" role="group" data-i18n-aria="filter.label" aria-label="Yetib borish hududi"></div>
-
-        <div class="layout">
-          <div class="trips-col">
-            <p class="count" id="count" aria-live="polite"></p>
-            <div id="tripGroups"></div>
-            <p class="empty" id="empty" hidden data-i18n="trips.empty">Bu manzilga hozircha qatnov yo'q. Boshqa tumanni tanlang.</p>
-          </div>
-          <aside class="side">
-            <figure class="scheme" id="schemeTrips"></figure>
-          </aside>
-        </div>
+        <p class="count" id="count" aria-live="polite"></p>
+        <div id="tripGroups"></div>
+        <p class="empty" id="empty" hidden data-i18n="trips.empty">Bu manzilga hozircha qatnov yo'q. Boshqa tumanni tanlang.</p>
       </div>
-      <p class="photo-credit" data-i18n="photo.kuhitang">Ko'hitang tog'laridagi yo'l</p>
     </section>
 
     <!-- 3. So'rov shakli -->
-    <section class="screen photo" data-screen="request" id="formPanel" hidden>
-      <div class="wrap">
+    <section class="screen pad" data-screen="request" id="formPanel" hidden>
+      <div class="wrap mid">
+        <ol class="stepper" data-step="2"></ol>
         <a class="back" href="#/trips" data-i18n="req.back">Qatnovlarga qaytish</a>
         <div class="req-layout">
           <div class="ticket" id="chosen"></div>
@@ -106,14 +100,16 @@
           </div>
         </div>
       </div>
-      <p class="photo-credit" data-i18n="photo.kuhitang">Ko'hitang tog'laridagi yo'l</p>
     </section>
 
     <!-- 4. Tasdiq -->
-    <section class="screen photo" data-screen="done" id="confirmPanel" hidden>
-      <div class="wrap">
+    <section class="screen pad" data-screen="done" id="confirmPanel" hidden>
+      <div class="wrap mid">
+        <ol class="stepper" data-step="3"></ol>
         <div class="sheet receipt">
-          <svg class="check" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28" pathLength="1"/><path d="M19 33l9 9 17-19" pathLength="1"/></svg>
+          <div class="check-wrap" aria-hidden="true">
+            <svg class="check" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" pathLength="1"/><path d="M19 33l9 9 17-19" pathLength="1"/></svg>
+          </div>
           <h1 class="sheet-title" tabindex="-1" data-i18n="done.title">So'rov yuborildi</h1>
           <dl class="confirm" id="confirmBody"></dl>
           <p class="note" data-i18n="done.note">Bu sinov loyihasi: haydovchiga haqiqiy xabar bormaydi, so'rov faqat shu brauzerda saqlanadi.</p>
@@ -123,12 +119,11 @@
           </div>
         </div>
       </div>
-      <p class="photo-credit" data-i18n="photo.kuhitang">Ko'hitang tog'laridagi yo'l</p>
     </section>
 
     <!-- 5. So'rovlarim -->
-    <section class="screen" data-screen="mine" hidden>
-      <div class="wrap narrow">
+    <section class="screen pad" data-screen="mine" hidden>
+      <div class="wrap mid">
         <h1 class="screen-title" tabindex="-1" data-i18n="mine.title">Yuborilgan so'rovlar</h1>
         <ul class="history" id="history"></ul>
         <div class="empty-state" id="historyEmpty">
@@ -140,11 +135,8 @@
   </main>
 
   <footer class="wrap foot">
-    <p class="credits"><span data-i18n="foot.photos">Fotosuratlar Wikimedia Commons'dan:</span>
-      <a href="https://commons.wikimedia.org/wiki/File:M39_Highway_in_Uzbekistan_near_Jomboy.jpg" data-i18n="photo.jomboy">M39 yo'li</a> — Yoshi Canopus;
-      <a href="https://commons.wikimedia.org/wiki/File:Mountain_road_passing_through_Kuhitang_range.jpg" data-i18n="photo.kuhitang">Ko'hitang tog'laridagi yo'l</a> — Panpanchik;
-      <a href="https://commons.wikimedia.org/wiki/File:GM_Labo._Muqimiy_street,_Tashkent,_Uzbekistan_01.jpg">GM Labo</a> — Jamshid Nurkulov.
-      <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></p>
+    <p><span data-i18n="foot.photo">Bosh sahifadagi surat:</span>
+      <a href="https://commons.wikimedia.org/wiki/File:Highway_light_trains_at_night_(Unsplash).jpg">Highway light trails at night</a> — Jamie Street, Wikimedia Commons, CC0.</p>
     <p data-i18n="foot.note">Qatnovlar namunaviy ma'lumot. Narx hisoblash, yuk sig'imini tekshirish va haqiqiy band qilish bu sinov loyihasida yo'q.</p>
   </footer>
 
