@@ -12,7 +12,7 @@ Kichik yukini jo'natmoqchi bo'lgan foydalanuvchiga mos qatnovni topishga yordam 
 | 2. "Barchasi", "A tumani", "B tumani", "C tumani" | Yetib borish hududi bo'yicha filtr tugmalari |
 | 3. Tanlanganda so'rov shakli yo'nalish va vaqt bilan | "Tanlash" → shakl tepasida tanlangan qatnov |
 | 4. Ism va yuk tavsifi majburiy | Bo'sh yoki faqat bo'shliqli qiymat rad etiladi, o'zbekcha xato chiqadi |
-| 5. Tasdiq: qatnov, ism, yuk tavsifi | "So'rov qabul qilindi" paneli |
+| 5. Tasdiq: qatnov, ism, yuk tavsifi | "So'rov yuborildi" paneli |
 
 ## Dizayn
 - Qatnovlar sxemasi (metro chizmasi uslubida): tanlangan tumanga boradigan yo'llar rangli bo'lib ajraladi. Bu xarita emas, faqat qatnovlar bog'lanishi.
