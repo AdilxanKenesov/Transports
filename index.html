@@ -11,6 +11,22 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Ikonlar to'plami -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8.5 18H14a4 4 0 0 0 0-8h-4a4 4 0 0 1 0-8h5.5" transform="translate(0 4) scale(1 .67)"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></symbol>
+      <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+      <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
+      <symbol id="i-truck" viewBox="0 0 24 24"><path d="M2 6h11v10H2zM13 9h4.5L21 12.5V16h-8z"/><circle cx="6.5" cy="17.5" r="2"/><circle cx="17" cy="17.5" r="2"/></symbol>
+      <symbol id="i-box" viewBox="0 0 24 24"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8M7.5 5.5l9 5"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2.2 2.2L15 10.5"/></symbol>
+      <symbol id="i-logout" viewBox="0 0 24 24"><path d="M10 4H5v16h5M14 8l4 4-4 4M18 12H9"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5a7 7 0 0 0-14 0C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    </defs>
+  </svg>
   <a class="skip" href="#main" data-i18n="skip">Asosiy qismga o'tish</a>
 
   <header class="nav">
@@ -20,10 +36,18 @@
         <span data-i18n="brand">Kichik yuk</span>
       </a>
       <nav class="links" data-i18n-aria="nav.label" aria-label="Bo'limlar">
-        <a href="#/trips" data-nav="trips" data-i18n="nav.trips">Qatnovlar</a>
-        <button type="button" class="about-btn" id="aboutBtn" data-i18n="nav.about">Sayt haqida</button>
-        <a href="#/mine" data-nav="mine"><span data-i18n="nav.mine">So'rovlarim</span> <span class="badge" id="mineCount" hidden></span></a>
+        <a href="#/trips" data-nav="trips"><svg class="ic" aria-hidden="true"><use href="#i-route"/></svg><span data-i18n="nav.trips">Qatnovlar</span></a>
+        <button type="button" class="about-btn" id="aboutBtn"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span data-i18n="nav.about">Sayt haqida</span></button>
+        <a href="#/mine" data-nav="mine"><svg class="ic" aria-hidden="true"><use href="#i-list"/></svg><span data-i18n="nav.mine">So'rovlarim</span> <span class="badge" id="mineCount" hidden></span></a>
+        <a href="admin.html" id="navAdmin" hidden><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><span data-i18n="nav.admin">Admin</span></a>
       </nav>
+      <div class="auth-nav">
+        <a class="btn quiet nav-login" href="#/login" data-nav="login" id="navLogin"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg><span data-i18n="nav.login">Kirish</span></a>
+        <div class="nav-user" id="navUser" hidden>
+          <span class="nav-user-name" id="navUserName"></span>
+          <button type="button" class="about-btn" id="logoutBtn"><svg class="ic" aria-hidden="true"><use href="#i-logout"/></svg><span data-i18n="nav.logout">Chiqish</span></button>
+        </div>
+      </div>
       <div class="lang" id="lang" role="group" data-i18n-aria="lang.label" aria-label="Til">
         <button type="button" data-lang="uz" lang="uz" aria-label="O'zbekcha">UZ</button>
         <button type="button" data-lang="ru" lang="ru" aria-label="Русский">RU</button>
@@ -40,7 +64,7 @@
         <div class="wrap hero-in">
           <h1 id="heroTitle" tabindex="-1" data-i18n="hero.title" data-split>Kichik yukingizni yo'lga chiqayotgan qatnov bilan jo'nating</h1>
           <p class="lead" data-i18n="hero.lead">Manzilni tanlang, mos qatnovni belgilang va yuk haqida qisqa yozing.</p>
-          <a class="btn primary cta" href="#/trips" data-i18n="hero.cta">Qatnovlarni ko'rish</a>
+          <a class="btn primary cta" href="#/trips"><span data-i18n="hero.cta">Qatnovlarni ko'rish</span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </div>
         <div class="wrap">
           <section class="board" aria-labelledby="tickerLabel">
@@ -50,13 +74,10 @@
         </div>
       </div>
 
-      <div class="wrap steps-block">
-        <h2 data-i18n="steps.title">Uch qadamda jo'nating</h2>
-        <ol class="steps" id="steps">
-          <li class="glow"><h3 data-i18n="steps.1t">Manzilni tanlang</h3><p data-i18n="steps.1p">Yuk qaysi tumanga borishini belgilang — ro'yxatda faqat o'sha yoqqa ketadigan qatnovlar qoladi.</p></li>
-          <li class="glow"><h3 data-i18n="steps.2t">Qatnovni belgilang</h3><p data-i18n="steps.2p">Jo'nash kuni va vaqti sizga mos keladigan qatnovni tanlang.</p></li>
-          <li class="glow"><h3 data-i18n="steps.3t">Yuk haqida yozing</h3><p data-i18n="steps.3p">Ismingiz va yukning qisqa tavsifi kifoya. So'rov shu zahoti tasdiqlanadi.</p></li>
-        </ol>
+      <div class="wrap offers-block">
+        <h2 data-i18n="offers.title">Takliflar: qaysi tumanga jo'natasiz?</h2>
+        <p class="offers-lead" data-i18n="offers.lead">Tumanni tanlang — o'sha yoqqa ketadigan qatnovlar darhol ochiladi.</p>
+        <ul class="offers" id="offers"></ul>
       </div>
     </section>
 
@@ -83,16 +104,17 @@
             <h1 class="sheet-title" tabindex="-1" data-i18n="req.title">Yuk jo'natish so'rovi</h1>
             <form id="requestForm" novalidate>
               <div class="field">
-                <label for="name" data-i18n="form.name">Ismingiz</label>
+                <label for="name"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg><span data-i18n="form.name">Ismingiz</span></label>
                 <input id="name" name="name" type="text" maxlength="60" autocomplete="name" required aria-describedby="nameError" data-i18n-ph="form.namePh" placeholder="Masalan, Sinovchi 01">
                 <p class="error" id="nameError"></p>
               </div>
               <div class="field">
-                <label for="cargo" data-i18n="form.cargo">Yuk haqida qisqacha</label>
+                <label for="cargo"><svg class="ic" aria-hidden="true"><use href="#i-box"/></svg><span data-i18n="form.cargo">Yuk haqida qisqacha</span></label>
                 <textarea id="cargo" name="cargo" rows="3" maxlength="200" required aria-describedby="cargoError cargoHint" data-i18n-ph="form.cargoPh" placeholder="Masalan, 2 quti kitob"></textarea>
                 <p class="hint" id="cargoHint" data-i18n="form.cargoHint">Nima va nechta ekanini yozing.</p>
                 <p class="error" id="cargoError"></p>
               </div>
+              <p class="error" id="formError" role="alert"></p>
               <div class="actions">
                 <button type="submit" class="btn primary" data-i18n="form.submit">So'rovni yuborish</button>
                 <a class="btn quiet" href="#/trips" id="cancelBtn" data-i18n="form.cancel">Bekor qilish</a>
@@ -115,8 +137,8 @@
           <dl class="confirm" id="confirmBody"></dl>
           <p class="note" data-i18n="done.note">Bu sinov loyihasi: haydovchiga haqiqiy xabar bormaydi, so'rov faqat shu brauzerda saqlanadi.</p>
           <div class="actions">
-            <a class="btn primary" href="#/trips" data-i18n="done.again">Yana yuk jo'natish</a>
-            <a class="btn quiet" href="#/mine" data-i18n="done.mine">So'rovlarimni ko'rish</a>
+            <a class="btn primary" href="#/trips"><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg><span data-i18n="done.again">Yana yuk jo'natish</span></a>
+            <a class="btn quiet" href="#/mine"><svg class="ic" aria-hidden="true"><use href="#i-list"/></svg><span data-i18n="done.mine">So'rovlarimni ko'rish</span></a>
           </div>
         </div>
       </div>
@@ -126,38 +148,83 @@
     <section class="screen pad" data-screen="mine" hidden>
       <div class="wrap mid">
         <h1 class="screen-title" tabindex="-1" data-i18n="mine.title">Yuborilgan so'rovlar</h1>
+        <p class="owner" id="mineOwner" hidden></p>
+        <p class="guest-note" id="guestNote"><span data-i18n="mine.guestNote">Siz mehmon sifatida ko'ryapsiz: bu so'rovlar faqat shu brauzerda saqlanadi.</span> <a href="#/login" data-i18n="mine.guestLink">Hisobga kirish</a></p>
         <ul class="history" id="history"></ul>
         <div class="empty-state" id="historyEmpty">
           <p data-i18n="mine.empty">Hali so'rov yubormadingiz. Qatnovni tanlab, birinchisini yuboring.</p>
-          <a class="btn primary" href="#/trips" data-i18n="mine.cta">Qatnov tanlash</a>
+          <a class="btn primary" href="#/trips"><svg class="ic" aria-hidden="true"><use href="#i-route"/></svg><span data-i18n="mine.cta">Qatnov tanlash</span></a>
         </div>
       </div>
     </section>
+
+    <!-- 6. Kirish / ro'yxatdan o'tish -->
+    <section class="screen pad" data-screen="login" hidden>
+      <div class="wrap auth-wrap">
+        <div class="sheet auth-sheet">
+          <div class="seg" role="group" data-i18n-aria="auth.modeLabel" aria-label="Kirish yoki ro'yxatdan o'tish">
+            <button type="button" data-auth-mode="login" data-i18n="auth.tab.login">Kirish</button>
+            <button type="button" data-auth-mode="register" data-i18n="auth.tab.register">Ro'yxatdan o'tish</button>
+          </div>
+          <h1 class="sheet-title" id="authTitle" tabindex="-1">Hisobga kirish</h1>
+          <p class="auth-need" id="authNeed" data-i18n="auth.need" hidden>So'rov yuborish uchun hisobga kiring — keyin tanlagan qatnovingizga qaytasiz.</p>
+          <form id="authForm" novalidate>
+            <div class="field" id="authNameField" hidden>
+              <label for="authName" data-i18n="auth.name">Ismingiz</label>
+              <input id="authName" type="text" maxlength="60" autocomplete="name">
+            </div>
+            <div class="field">
+              <label for="authLogin" data-i18n="auth.login">Login</label>
+              <input id="authLogin" type="text" maxlength="30" autocomplete="username" autocapitalize="none" spellcheck="false" aria-describedby="authLoginHint">
+              <p class="hint" id="authLoginHint" data-i18n="auth.loginHint" hidden>3–30 ta belgi: lotin harflari, raqamlar, nuqta yoki chiziqcha.</p>
+            </div>
+            <div class="field">
+              <label for="authPassword" data-i18n="auth.password">Parol</label>
+              <input id="authPassword" type="password" maxlength="100" autocomplete="current-password" aria-describedby="authPasswordHint">
+              <p class="hint" id="authPasswordHint" data-i18n="auth.passwordHint" hidden>Kamida 6 ta belgi.</p>
+            </div>
+            <p class="error" id="authError" role="alert"></p>
+            <div class="actions"><button type="submit" class="btn primary" id="authSubmit">Kirish</button></div>
+          </form>
+          <p class="note mode-note" data-i18n="mode.local" hidden>Demo rejim: server ulanmagan. Hisoblar va so'rovlar faqat shu brauzerda saqlanadi.</p>
+        </div>
+
+        <div class="auth-side">
+          <div class="sheet demo-box" id="demoBox">
+            <h2 data-i18n="auth.demoTitle">Ro'yxatdan o'tmasdan sinab ko'ring</h2>
+            <p data-i18n="auth.demoText">Tayyor sinov hisoblari bilan bir bosishda kiring.</p>
+            <button type="button" class="btn quiet" data-demo="user"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg><span data-i18n="auth.demoUser">Demo mijoz bo'lib kirish</span></button>
+            <a class="btn quiet" href="admin.html"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><span data-i18n="auth.adminLink">Admin paneli (alohida sayt)</span></a>
+          </div>
+          <p class="note" data-i18n="auth.guest">Hisobsiz ham so'rov yuborish mumkin — u holda so'rovlar faqat shu brauzerda saqlanadi. Hisob bilan esa so'rovlaringiz faqat sizga ko'rinadi.</p>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="wrap foot">
-    <p><span data-i18n="foot.photo">Bosh sahifadagi surat:</span>
-      <a href="https://commons.wikimedia.org/wiki/File:Highway_light_trains_at_night_(Unsplash).jpg">Highway light trails at night</a> — Jamie Street, Wikimedia Commons, CC0.</p>
+    <p><span data-i18n="foot.photo">Suratlar (Wikimedia Commons):</span>
+      <a href="https://commons.wikimedia.org/wiki/File:Highway_light_trains_at_night_(Unsplash).jpg">Highway light trails at night</a> — Jamie Street, CC0;
+      <a href="https://commons.wikimedia.org/wiki/File:GM_Labo._Muqimiy_street,_Tashkent,_Uzbekistan_01.jpg">GM Labo</a> — Jamshid Nurkulov, CC BY-SA 4.0;
+      <a href="https://commons.wikimedia.org/wiki/File:Mountain_road_passing_through_Kuhitang_range.jpg">Mountain road, Kuhitang</a> — Panpanchik, CC BY-SA 4.0.</p>
     <p data-i18n="foot.note">Qatnovlar namunaviy ma'lumot. Narx hisoblash, yuk sig'imini tekshirish va haqiqiy band qilish bu sinov loyihasida yo'q.</p>
   </footer>
 
   <!-- Kirish oynasi: sayt nima qilishini tushuntiradi (birinchi kirishda) -->
   <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introTitle" hidden>
-    <div class="intro-card">
-      <div class="intro-top">
-        <div class="lang" role="group" data-i18n-aria="lang.label" aria-label="Til">
-          <button type="button" data-lang="uz" lang="uz" aria-label="O'zbekcha">UZ</button>
-          <button type="button" data-lang="ru" lang="ru" aria-label="Русский">RU</button>
-          <button type="button" data-lang="en" lang="en" aria-label="English">EN</button>
-        </div>
-        <button type="button" class="intro-skip" id="introSkip" data-i18n="intro.skip">O'tkazib yuborish</button>
-      </div>
-      <div class="intro-body" id="introBody">
-        <div class="intro-art" id="introArt" aria-hidden="true"></div>
+    <div class="intro-bg" aria-hidden="true"><span></span><span></span><span></span></div>
+    <button type="button" class="intro-skip" id="introSkip" data-i18n="intro.skip">O'tkazib yuborish</button>
+    <div class="intro-main" id="introBody">
+      <div class="intro-copy">
+        <div class="intro-icon" id="introIcon" aria-hidden="true"></div>
         <p class="intro-count" id="introCount"></p>
         <h2 id="introTitle" tabindex="-1"></h2>
         <p class="intro-text" id="introText"></p>
       </div>
+      <div class="intro-art" id="introArt" aria-hidden="true"></div>
+    </div>
+    <div class="intro-foot">
       <div class="intro-dots" id="introDots" aria-hidden="true"><span></span><span></span><span></span></div>
       <div class="actions">
         <button type="button" class="btn quiet" id="introBack" data-i18n="intro.back">Orqaga</button>
@@ -167,6 +234,7 @@
   </div>
 
   <script src="i18n.js"></script>
+  <script src="api.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0d0c0b">
+  <title>Kichik yuk — admin paneli</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2.2 2.2L15 10.5"/></symbol>
+      <symbol id="i-logout" viewBox="0 0 24 24"><path d="M10 4H5v16h5M14 8l4 4-4 4M18 12H9"/></symbol>
+      <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+    </defs>
+  </svg>
+
+  <header class="nav">
+    <div class="wrap nav-in">
+      <span class="brand"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><span data-i18n="admin.site">Admin paneli</span></span>
+      <nav class="links" aria-label="Bo'limlar">
+        <a href="index.html"><svg class="ic" aria-hidden="true"><use href="#i-back"/></svg><span data-i18n="admin.back">Saytga qaytish</span></a>
+      </nav>
+      <div class="nav-user" id="navUser" hidden>
+        <span class="nav-user-name" id="navUserName"></span>
+        <button type="button" class="about-btn" id="logoutBtn"><svg class="ic" aria-hidden="true"><use href="#i-logout"/></svg><span data-i18n="nav.logout">Chiqish</span></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="screen pad">
+    <!-- Kirish (faqat admin) -->
+    <section class="sheet admin-login" id="loginBox" hidden>
+      <h1 class="sheet-title" data-i18n="admin.loginTitle">Admin hisobiga kirish</h1>
+      <form id="authForm" novalidate>
+        <div class="field">
+          <label for="authLogin" data-i18n="auth.login">Login</label>
+          <input id="authLogin" type="text" maxlength="30" autocomplete="username" autocapitalize="none" spellcheck="false">
+        </div>
+        <div class="field">
+          <label for="authPassword" data-i18n="auth.password">Parol</label>
+          <input id="authPassword" type="password" maxlength="100" autocomplete="current-password">
+        </div>
+        <p class="error" id="authError" role="alert"></p>
+        <div class="actions">
+          <button type="submit" class="btn primary" id="authSubmit" data-i18n="auth.submit.login">Kirish</button>
+          <button type="button" class="btn quiet" id="demoAdmin" data-i18n="admin.demo">Demo admin bo'lib kirish</button>
+        </div>
+      </form>
+      <p class="note mode-note" data-i18n="mode.local" hidden>Demo rejim: server ulanmagan. Hisoblar va so'rovlar faqat shu brauzerda saqlanadi.</p>
+    </section>
+
+    <!-- Panel -->
+    <section class="wrap" id="panel" hidden>
+      <h1 class="screen-title" data-i18n="admin.title">Admin panel</h1>
+      <p class="note mode-note" data-i18n="mode.local" hidden>Demo rejim: server ulanmagan. Hisoblar va so'rovlar faqat shu brauzerda saqlanadi.</p>
+      <p class="error" id="adminError" role="alert"></p>
+      <ul class="stats" id="adminStats"></ul>
+
+      <h2 class="block-title" data-i18n="admin.requests">Barcha so'rovlar</h2>
+      <div class="table-wrap" id="adminTableWrap">
+        <table class="admin-table">
+          <thead><tr>
+            <th scope="col" data-i18n="admin.col.user">Mijoz</th>
+            <th scope="col" data-i18n="admin.col.trip">Qatnov</th>
+            <th scope="col" data-i18n="admin.col.cargo">Yuk va ism</th>
+            <th scope="col" data-i18n="admin.col.sent">Yuborilgan</th>
+            <th scope="col" data-i18n="admin.col.status">Holat</th>
+            <th scope="col"><span class="sr" data-i18n="mine.delete">O'chirish</span></th>
+          </tr></thead>
+          <tbody id="adminRows"></tbody>
+        </table>
+      </div>
+      <p class="empty" id="adminEmpty" data-i18n="admin.empty" hidden>Hali hech kim so'rov yubormagan.</p>
+
+      <h2 class="block-title" data-i18n="admin.users">Foydalanuvchilar</h2>
+      <ul class="user-list" id="adminUsers"></ul>
+    </section>
+  </main>
+
+  <script src="i18n.js"></script>
+  <script src="api.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -31,6 +31,11 @@ let currentFilter = localStorage.getItem(FILTER_KEY);
 if (!FILTERS.includes(currentFilter)) currentFilter = "all";
 let current = { name: "home" };
 let lastRequest = null;
+let user = null;        // null — mehmon (hisobsiz)
+let myRequests = [];    // joriy foydalanuvchi (yoki mehmon) so'rovlari
+let adminData = null;   // admin panel ma'lumotlari
+let authMode = "login"; // kirish ekranidagi rejim: login | register
+let pendingHash = null; // kirgandan keyin qaytiladigan manzil (tanlangan qatnov)
 let shownErrors = { name: false, cargo: false };
 
 /* ---------- Til ---------- */
@@ -85,17 +90,53 @@ function el(tag, className, text) {
   return node;
 }
 
-function loadRequests() {
+// Mehmon so'rovlari shu brauzerda saqlanadi
+function guestLoad() {
   try {
     const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return Array.isArray(data) ? data : [];
+    if (!Array.isArray(data)) return [];
+    data.forEach((r, i) => { if (!r.id) r.id = "g" + i + "-" + (r.createdAt || ""); });
+    return data;
   } catch {
     return [];
   }
 }
 
-function saveRequests(list) {
+function guestSave(list) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+
+const loadRequests = () => myRequests;
+
+// Hisobga kirgan bo'lsa — faqat o'z so'rovlari backenddan, aks holda — mehmon so'rovlari
+async function refreshRequests() {
+  if (!user) {
+    myRequests = [];
+    return;
+  }
+  try {
+    myRequests = await Api.listMine();
+  } catch {
+    myRequests = [];
+  }
+}
+
+async function addRequest(data) {
+  if (user) {
+    const created = await Api.create(data);
+    myRequests = [created, ...myRequests];
+    return created;
+  }
+  const created = { ...data, id: "g" + Date.now().toString(36), createdAt: new Date().toISOString() };
+  myRequests = [created, ...guestLoad()];
+  guestSave(myRequests);
+  return created;
+}
+
+async function removeRequest(id) {
+  if (user) await Api.remove(id);
+  myRequests = myRequests.filter((r) => r.id !== id);
+  if (!user) guestSave(myRequests);
 }
 
 // Ekranlar orasidagi silliq o'tish (View Transitions; yo'q bo'lsa — darhol)
@@ -126,6 +167,40 @@ function renderTicker() {
     });
     box.appendChild(ul);
   }
+}
+
+/* ---------- Bosh sahifadagi taklif kartalari: har tuman uchun ---------- */
+function renderOffers() {
+  const ul = $("offers");
+  ul.innerHTML = "";
+  ["A", "B", "C"].forEach((k, i) => {
+    const trips = TRIPS.filter((trip) => trip.to === k);
+    const li = el("li", "offer glow");
+    li.style.setProperty("--c", LINE_COLOR[k]);
+    li.style.setProperty("--i", i);
+
+    const icon = el("span", "offer-icon");
+    icon.innerHTML = '<svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>';
+    li.appendChild(icon);
+    li.appendChild(el("h3", "", place(k)));
+    li.appendChild(el("p", "offer-count", COUNT_TEXT[lang](trips.length, "")));
+
+    const next = el("p", "offer-next");
+    next.innerHTML = '<svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>';
+    next.appendChild(el("span", "", `${t("offers.next")}: ${when(trips[0])}`));
+    li.appendChild(next);
+    li.appendChild(el("p", "offer-from", `${t("offers.from")}: ${[...new Set(trips.map((trip) => place(trip.from)))].join(", ")}`));
+
+    const btn = el("button", "btn pick", t("offers.open"));
+    btn.type = "button";
+    btn.setAttribute("aria-label", `${place(k)}: ${t("offers.open")}`);
+    btn.addEventListener("click", () => {
+      setFilter(k, false);
+      location.hash = "#/trips";
+    });
+    li.appendChild(btn);
+    ul.appendChild(li);
+  });
 }
 
 /* ---------- Qadamlar ko'rsatkichi: 1 Qatnov → 2 Yuk → 3 Tasdiq ---------- */
@@ -232,9 +307,14 @@ function tripCard(trip) {
   r.appendChild(el("span", "to", place(trip.to)));
   li.appendChild(r);
 
-  li.appendChild(el("div", "trip-id", t("trip.n", { id: trip.id })));
+  const idBox = el("div", "trip-id");
+  idBox.innerHTML = '<svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg>';
+  idBox.appendChild(el("span", "", t("trip.n", { id: trip.id })));
+  li.appendChild(idBox);
 
-  const btn = el("button", "btn pick", t("trip.pick"));
+  const btn = el("button", "btn pick");
+  btn.appendChild(el("span", "", t("trip.pick")));
+  btn.insertAdjacentHTML("beforeend", '<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg>');
   btn.type = "button";
   btn.setAttribute("aria-label", t("trip.pickAria", { id: trip.id, route: route(trip), when: when(trip) }));
   btn.addEventListener("click", () => {
@@ -275,6 +355,7 @@ function renderTicket(trip) {
 
 function clearErrors() {
   shownErrors = { name: false, cargo: false };
+  $("formError").textContent = "";
   [[nameInput, nameError], [cargoInput, cargoError]].forEach(([input, err]) => {
     err.textContent = "";
     input.classList.remove("invalid");
@@ -289,7 +370,7 @@ function showError(input, errorEl, key) {
 }
 
 /* ---------- Talab 4–5: ikkala maydon majburiy, keyin tasdiq ---------- */
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (current.name !== "request") return;
   clearErrors();
@@ -316,10 +397,16 @@ form.addEventListener("submit", (e) => {
     return;
   }
 
-  lastRequest = { tripId: current.trip.id, name, cargo, createdAt: new Date().toISOString() };
-  const list = loadRequests();
-  list.unshift(lastRequest);
-  saveRequests(list);
+  const submitBtn = form.querySelector("[type=submit]");
+  submitBtn.disabled = true;
+  try {
+    lastRequest = await addRequest({ tripId: current.trip.id, name, cargo });
+  } catch (err) {
+    $("formError").textContent = apiMessage(err);
+    return;
+  } finally {
+    submitBtn.disabled = false;
+  }
   form.reset();
   location.hash = "#/done";
 });
@@ -362,22 +449,31 @@ function renderHistory() {
     li.style.setProperty("--i", i);
     if (trip) li.style.setProperty("--c", LINE_COLOR[trip.to]);
     const box = el("div");
-    box.appendChild(el("div", "h-main", `${r.cargo} — ${trip ? route(trip) : r.route}`));
+    const main = el("div", "h-main", `${r.cargo} — ${trip ? route(trip) : r.route}`);
+    if (user && r.status) main.appendChild(statusChip(r.status));
+    box.appendChild(main);
     box.appendChild(el("div", "h-meta", t("mine.meta", { id: r.tripId, when: trip ? when(trip) : r.time, name: r.name, sent: sentText(r) })));
     li.appendChild(box);
     const del = el("button", "btn quiet", t("mine.delete"));
     del.type = "button";
     del.setAttribute("aria-label", t("mine.deleteAria", { id: r.tripId }));
-    del.addEventListener("click", () => {
-      const cur = loadRequests();
-      cur.splice(i, 1);
-      saveRequests(cur);
+    del.addEventListener("click", async () => {
+      del.disabled = true;
+      try { await removeRequest(r.id); } catch { del.disabled = false; return; }
       withTransition(() => { renderHistory(); renderBadge(); }, "none");
     });
     li.appendChild(del);
     ul.appendChild(li);
   });
-  $("historyEmpty").hidden = list.length > 0;
+  $("historyEmpty").hidden = list.length > 0 || !user;
+  $("guestNote").hidden = Boolean(user);
+  $("mineOwner").textContent = user ? t("mine.owner", { name: user.name, login: user.login }) : "";
+  $("mineOwner").hidden = !user;
+}
+
+function statusChip(status) {
+  const chip = el("span", "chip st-" + status, t("status." + status));
+  return chip;
 }
 
 function renderBadge() {
@@ -393,26 +489,35 @@ function renderBadge() {
 }
 
 /* ---------- Ekranlar (hash orqali: orqaga tugmasi ham ishlaydi) ---------- */
-const ORDER = { home: 0, trips: 1, request: 2, done: 3, mine: 4 };
+const ORDER = { home: 0, trips: 1, request: 2, done: 3, mine: 4, login: 5, admin: 6 };
 
 function parseRoute() {
   const [name, arg] = location.hash.replace(/^#\/?/, "").split("/");
   if (name === "request") {
     const trip = TRIPS.find((x) => x.id === arg);
-    return trip ? { name, trip } : { name: "trips" };
+    if (!trip) return { name: "trips" };
+    // Hisob faqat buyurtma berayotganda so'raladi
+    if (!user) {
+      pendingHash = "#/request/" + trip.id;
+      return { name: "login" };
+    }
+    return { name, trip };
   }
   if (name === "done") return lastRequest || loadRequests().length ? { name } : { name: "trips" };
   if (name === "trips" || name === "mine") return { name };
+  if (name === "login") return user ? { name: "mine" } : { name };
   return { name: "home" };
 }
 
 function renderAll() {
   renderTicker();
+  renderOffers();
   renderSteppers();
   renderFilters();
   renderTrips();
   renderHistory();
   renderBadge();
+  renderAuth();
   if (current.name === "request") {
     renderTicket(current.trip);
     if (shownErrors.name) showError(nameInput, nameError, "err.name");
@@ -439,6 +544,8 @@ function showScreen(next, focusHeading) {
   }
   if (next.name === "done") renderConfirm();
   if (next.name === "mine") renderHistory();
+  if (next.name === "login") renderAuth();
+  if (next.name === "request" && user && !nameInput.value) nameInput.value = user.name;
   renderBadge();
 
   window.scrollTo(0, 0);
@@ -467,12 +574,20 @@ if ("IntersectionObserver" in window && !reducedMotion) {
       if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
     });
   }, { threshold: 0.05 });
-  document.querySelectorAll(".steps").forEach((n) => { n.classList.add("reveal"); io.observe(n); });
+  document.querySelectorAll(".offers").forEach((n) => { n.classList.add("reveal"); io.observe(n); });
 }
 
 applyStaticTexts();
 renderAll();
 showScreen(parseRoute(), false);
+
+// Backend (yoki demo rejim) bilan bog'lanib, kirgan foydalanuvchini aniqlaymiz
+Api.init().then(async (u) => {
+  user = u;
+  await refreshRequests();
+  renderAll();
+  showScreen(parseRoute(), false);
+});
 
 /* ---------- Kirish oynasi: sayt haqida 3 slayd (birinchi kirishda ochiladi) ---------- */
 const INTRO_KEY = "bilet006_intro";
@@ -499,6 +614,8 @@ function introArt(step) {
 }
 
 function renderIntro(dir) {
+  introEl.dataset.step = introStep;
+  $("introIcon").innerHTML = `<svg class="ic"><use href="#i-${["truck", "route", "box"][introStep - 1]}"/></svg>`;
   $("introArt").innerHTML = introArt(introStep);
   $("introCount").textContent = `${introStep} / 3`;
   $("introTitle").textContent = t(`intro.${introStep}t`);
@@ -550,3 +667,96 @@ document.addEventListener("keydown", (e) => {
 });
 
 if (!localStorage.getItem(INTRO_KEY)) openIntro();
+
+/* =====================================================================
+   Hisob (kirish / ro'yxatdan o'tish / demo) va admin panel
+   ===================================================================== */
+function apiMessage(err) {
+  const key = "api." + ((err && err.code) || "server");
+  return I18N[lang][key] || I18N.uz[key] ? t(key) : t("api.server");
+}
+
+function renderAuth() {
+  // Navigatsiya
+  $("navLogin").hidden = Boolean(user);
+  $("navUser").hidden = !user;
+  $("navAdmin").hidden = !(user && user.role === "admin");
+  $("authNeed").hidden = !pendingHash;
+  if (user) $("navUserName").textContent = user.name;
+
+  // Kirish ekrani
+  const reg = authMode === "register";
+  $("authTitle").textContent = t(reg ? "auth.title.register" : "auth.title.login");
+  $("authNameField").hidden = !reg;
+  $("authSubmit").textContent = t(reg ? "auth.submit.register" : "auth.submit.login");
+  $("authPassword").autocomplete = reg ? "new-password" : "current-password";
+  $("authPasswordHint").hidden = !reg;
+  $("authLoginHint").hidden = !reg;
+  document.querySelectorAll("[data-auth-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.authMode === authMode)));
+  $("demoBox").hidden = !Api.demoEnabled;
+  document.querySelectorAll(".mode-note").forEach((n) => { n.hidden = Api.mode !== "local"; });
+}
+
+async function signedIn(u) {
+  user = u;
+  adminData = null;
+  await refreshRequests();
+  $("authForm").reset();
+  $("authError").textContent = "";
+  renderAll();
+  const target = pendingHash || "#/trips";
+  pendingHash = null;
+  if (location.hash === target) showScreen(parseRoute(), true);
+  else location.hash = target;
+}
+
+$("authForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const err = $("authError");
+  err.textContent = "";
+  const data = { name: $("authName").value, login: $("authLogin").value, password: $("authPassword").value };
+  const btn = $("authSubmit");
+  btn.disabled = true;
+  try {
+    await signedIn(authMode === "register" ? await Api.register(data) : await Api.login(data));
+  } catch (ex) {
+    err.textContent = apiMessage(ex);
+    const bad = ex.code === "bad_name" ? $("authName") : ex.code === "bad_password" ? $("authPassword") : $("authLogin");
+    bad.focus();
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+document.addEventListener("click", async (e) => {
+  const modeBtn = e.target.closest("[data-auth-mode]");
+  if (modeBtn) {
+    authMode = modeBtn.dataset.authMode;
+    $("authError").textContent = "";
+    renderAuth();
+    return;
+  }
+  const demoBtn = e.target.closest("[data-demo]");
+  if (demoBtn) {
+    demoBtn.disabled = true;
+    try {
+      await signedIn(await Api.demo(demoBtn.dataset.demo));
+    } catch (ex) {
+      $("authError").textContent = apiMessage(ex);
+    } finally {
+      demoBtn.disabled = false;
+    }
+  }
+});
+
+$("logoutBtn").addEventListener("click", async () => {
+  try { await Api.logout(); } catch { /* baribir chiqamiz */ }
+  user = null;
+  adminData = null;
+  lastRequest = null;
+  await refreshRequests();
+  renderAll();
+  pendingHash = null;
+  if (current.name === "done" || current.name === "request") location.hash = "#/trips";
+  else showScreen(parseRoute(), false);
+});
