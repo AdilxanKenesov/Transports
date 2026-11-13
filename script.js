@@ -50,7 +50,7 @@ function applyStaticTexts() {
   document.querySelectorAll("[data-i18n-aria]").forEach((n) => n.setAttribute("aria-label", t(n.dataset.i18nAria)));
   document.querySelectorAll("[data-i18n-alt]").forEach((n) => { n.alt = t(n.dataset.i18nAlt); });
   document.querySelectorAll("[data-split]").forEach(splitWords);
-  document.querySelectorAll("#lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+  document.querySelectorAll("button[data-lang]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
 }
 
 // Sarlavhani so'zlarga bo'lish (so'zma-so'z ko'tarilish animatsiyasi uchun)
@@ -419,6 +419,7 @@ function renderAll() {
     if (shownErrors.cargo) showError(cargoInput, cargoError, "err.cargo");
   }
   if (current.name === "done") renderConfirm();
+  if (!$("intro").hidden) renderIntro();
   document.title = t("doc.title");
 }
 
@@ -454,7 +455,7 @@ function onRoute() {
 }
 
 window.addEventListener("hashchange", onRoute);
-$("lang").addEventListener("click", (e) => {
+document.addEventListener("click", (e) => {
   const b = e.target.closest("button[data-lang]");
   if (b) setLang(b.dataset.lang);
 });
@@ -473,23 +474,79 @@ applyStaticTexts();
 renderAll();
 showScreen(parseRoute(), false);
 
-/* ---------- Splash: bir seansda bir marta, bosish yoki klavish bilan o'tkaziladi ---------- */
-(function splash() {
-  const node = $("splash");
-  const active = node && getComputedStyle(node).display !== "none";
-  const finish = () => {
-    root.classList.add("splash-done");
-    if (node) node.remove();
-    document.removeEventListener("keydown", skip);
-  };
-  function skip() {
-    if (!node.isConnected) return;
-    node.classList.add("skip");
-    setTimeout(finish, 350);
+/* ---------- Kirish oynasi: sayt haqida 3 slayd (birinchi kirishda ochiladi) ---------- */
+const INTRO_KEY = "bilet006_intro";
+const introEl = $("intro");
+let introStep = 1;
+
+function introArt(step) {
+  if (step === 1) {
+    return `<svg class="ia-map" viewBox="0 0 340 130">
+      <path style="--c:var(--line-a);--i:0" pathLength="1" d="M40 65C120 65 150 22 250 22"/>
+      <path style="--c:var(--line-b);--i:1" pathLength="1" d="M40 65H250"/>
+      <path style="--c:var(--line-c);--i:2" pathLength="1" d="M40 65C120 65 150 108 250 108"/>
+      <circle cx="40" cy="65" r="9"/>
+      <circle style="--c:var(--line-a)" cx="250" cy="22" r="8"/><text x="266" y="27">${place("A")}</text>
+      <circle style="--c:var(--line-b)" cx="250" cy="65" r="8"/><text x="266" y="70">${place("B")}</text>
+      <circle style="--c:var(--line-c)" cx="250" cy="108" r="8"/><text x="266" y="113">${place("C")}</text></svg>`;
   }
-  try { sessionStorage.setItem("bilet006_splash", "1"); } catch {}
-  if (!active) return finish();
-  node.addEventListener("click", skip);
-  document.addEventListener("keydown", skip);
-  setTimeout(finish, 2750);
-})();
+  if (step === 2) {
+    return `<div class="ia-pick"><div class="ia-chips"><i>${t("filter.all")}</i><i>${place("A")}</i><i class="on">${place("B")}</i><i>${place("C")}</i></div>
+      <div class="ia-row"><b>10:00</b><u></u><em>${place("B")}</em></div></div>`;
+  }
+  return `<div class="ia-form"><div><span>${t("form.name")}</span><i>Sinovchi 01</i><span>${t("form.cargo")}</span><i>2 quti kitob</i></div>
+    <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="28"/><path d="M19 33l9 9 17-19"/></svg></div>`;
+}
+
+function renderIntro(dir) {
+  $("introArt").innerHTML = introArt(introStep);
+  $("introCount").textContent = `${introStep} / 3`;
+  $("introTitle").textContent = t(`intro.${introStep}t`);
+  $("introText").textContent = t(`intro.${introStep}p`);
+  $("introNext").textContent = t(introStep === 3 ? "intro.start" : "intro.next");
+  $("introBack").hidden = introStep === 1;
+  [...$("introDots").children].forEach((d, i) => d.classList.toggle("on", i === introStep - 1));
+  if (dir) {
+    const body = $("introBody");
+    body.classList.remove("next", "prev");
+    void body.offsetWidth;
+    body.classList.add(dir);
+  }
+}
+
+const pageParts = () => document.querySelectorAll("body > header, body > main, body > footer");
+
+function openIntro() {
+  introStep = 1;
+  introEl.hidden = false;
+  pageParts().forEach((n) => { n.inert = true; });
+  renderIntro();
+  $("introNext").focus();
+}
+
+function closeIntro() {
+  if (introEl.hidden) return;
+  introEl.hidden = true;
+  pageParts().forEach((n) => { n.inert = false; });
+  try { localStorage.setItem(INTRO_KEY, "1"); } catch {}
+  $("aboutBtn").focus({ preventScroll: true });
+}
+
+$("introNext").addEventListener("click", () => {
+  if (introStep === 3) return closeIntro();
+  introStep++;
+  renderIntro("next");
+});
+$("introBack").addEventListener("click", () => {
+  if (introStep > 1) { introStep--; renderIntro("prev"); }
+});
+$("introSkip").addEventListener("click", closeIntro);
+$("aboutBtn").addEventListener("click", openIntro);
+document.addEventListener("keydown", (e) => {
+  if (introEl.hidden) return;
+  if (e.key === "Escape") closeIntro();
+  if (e.key === "ArrowRight" && introStep < 3) { introStep++; renderIntro("next"); }
+  if (e.key === "ArrowLeft" && introStep > 1) { introStep--; renderIntro("prev"); }
+});
+
+if (!localStorage.getItem(INTRO_KEY)) openIntro();
