@@ -19,6 +19,7 @@ Kichik yukini jo'natmoqchi bo'lgan foydalanuvchiga mos qatnovni topishga yordam 
 - Har tumanning o'z rangi: A — ko'k, B — qahrabo, C — binafsha; filtr, sxema va qatnov qatorlarida bir xil.
 - Qatnovlar sana bo'yicha guruhlangan, vaqt katta raqamda, yo'nalish nuqta-chiziq ko'rinishida.
 - Kompyuterda o'ng tomonda yopishqoq "Jo'natma" paneli, telefonda bitta ustun.
+- Fon fotosuratlari (Wikimedia Commons, CC BY-SA 4.0): M39 yo'li, Jomboy tumani — Yoshi Canopus; Ko'hitang tog' yo'li — Panpanchik; GM Labo, Toshkent — Jamshid Nurkulov. Mualliflar sayt pastida havolalar bilan ko'rsatilgan.
 - Shrift: Golos Text (`fonts/` ichida, internetsiz ishlaydi).
 
 Qo'shimcha: yuborilgan so'rovlar va tanlangan filtr brauzerda (`localStorage`) saqlanadi; telefon ekraniga moslashgan.
