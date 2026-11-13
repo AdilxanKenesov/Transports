@@ -5,27 +5,39 @@ Kichik yukini jo'natmoqchi bo'lgan foydalanuvchiga mos qatnovni topishga yordam 
 ## Ochish
 `index.html` faylini brauzerda oching. Server va internet kerak emas (HTML + CSS + JavaScript).
 
+## Ekranlar
+Sayt bir nechta ekranga bo'lingan (manzil satridagi `#/...` orqali, brauzerning "orqaga" tugmasi ishlaydi):
+1. **Bosh sahifa** — sarlavha, qatnovlar sxemasi, uch qadam.
+2. **Qatnovlar** — hudud bo'yicha filtr va 5 ta qatnov.
+3. **So'rov** — tanlangan qatnov chiptasi va shakl.
+4. **Tasdiq** — yuborilgan so'rov ma'lumotlari.
+5. **So'rovlarim** — brauzerda saqlangan so'rovlar.
+
 ## Talablar va bajarilishi
 | Talab | Saytda |
 |---|---|
-| 1. 5 ta qatnov yo'nalishi va jo'nash vaqti bilan | Qatnov kartalari: ID, "Qayerdan → Qayerga", jo'nash vaqti |
-| 2. "Barchasi", "A tumani", "B tumani", "C tumani" | Yetib borish hududi bo'yicha filtr tugmalari |
-| 3. Tanlanganda so'rov shakli yo'nalish va vaqt bilan | "Tanlash" → shakl tepasida tanlangan qatnov |
-| 4. Ism va yuk tavsifi majburiy | Bo'sh yoki faqat bo'shliqli qiymat rad etiladi, o'zbekcha xato chiqadi |
-| 5. Tasdiq: qatnov, ism, yuk tavsifi | "So'rov yuborildi" paneli |
+| 1. 5 ta qatnov yo'nalishi va jo'nash vaqti bilan | "Qatnovlar" ekranidagi kartalar: vaqt, "Qayerdan → Qayerga", qatnov ID |
+| 2. "Barchasi", "A tumani", "B tumani", "C tumani" | Yetib borish hududi bo'yicha filtr tugmalari (sxemadagi tumanni bosish ham ishlaydi) |
+| 3. Tanlanganda so'rov shakli yo'nalish va vaqt bilan | "Tanlash" → "So'rov" ekrani: chiptada yo'nalish, sana va vaqt |
+| 4. Ism va yuk tavsifi majburiy | Bo'sh yoki faqat bo'shliqli qiymat rad etiladi, xato xabari chiqadi |
+| 5. Tasdiq: qatnov, ism, yuk tavsifi | "So'rov yuborildi" ekrani |
 
-## Dizayn
-- Qatnovlar sxemasi (metro chizmasi uslubida): tanlangan tumanga boradigan yo'llar rangli bo'lib ajraladi. Bu xarita emas, faqat qatnovlar bog'lanishi.
-- Har tumanning o'z rangi: A — ko'k, B — qahrabo, C — binafsha; filtr, sxema va qatnov qatorlarida bir xil.
-- Qatnovlar sana bo'yicha guruhlangan, vaqt katta raqamda, yo'nalish nuqta-chiziq ko'rinishida.
-- Kompyuterda o'ng tomonda yopishqoq "Jo'natma" paneli, telefonda bitta ustun.
+## Tillar
+O'zbekcha (asosiy), ruscha, inglizcha — yuqoridagi UZ / RU / EN tugmalari. Tanlangan til brauzerda saqlanadi. Matnlar `i18n.js` faylida.
+
+## Dizayn va animatsiyalar
+- Qatnovlar sxemasi (metro chizmasi uslubida, xarita emas): bosh sahifada chiziqlar chizilib chiqadi; tuman bosilsa, o'sha yoqqa boradigan qatnovlar ochiladi.
+- Har tumanning o'z rangi: A — ko'k, B — qahrabo, C — binafsha.
+- Ekranlar orasida silliq o'tish (View Transitions): tanlangan karta so'rov ekranidagi chiptaga aylanadi; filtr almashganda kartalar o'z joyiga siljiydi.
+- 3D kartalar (sichqoncha tomonga engashadi), chiptada yo'l bo'ylab yuradigan furgon, tasdiqda chizilib chiqadigan belgi.
+- "Kamroq harakat" sozlamasi yoqilgan qurilmalarda barcha animatsiyalar o'chadi.
 - Fon fotosuratlari (Wikimedia Commons, CC BY-SA 4.0): M39 yo'li, Jomboy tumani — Yoshi Canopus; Ko'hitang tog' yo'li — Panpanchik; GM Labo, Toshkent — Jamshid Nurkulov. Mualliflar sayt pastida havolalar bilan ko'rsatilgan.
-- Shrift: Golos Text (`fonts/` ichida, internetsiz ishlaydi).
+- Shrift: Golos Text, lotin va kirill (`fonts/` ichida, internetsiz ishlaydi).
 
-Qo'shimcha: yuborilgan so'rovlar va tanlangan filtr brauzerda (`localStorage`) saqlanadi; telefon ekraniga moslashgan.
+Qo'shimcha: yuborilgan so'rovlar, tanlangan filtr va til brauzerda (`localStorage`) saqlanadi; telefon ekraniga moslashgan.
 
 ## Tekshirish
-1. "B tumani" → faqat Y02 va Y03.
+1. "Qatnovlar" → "B tumani" → faqat Y02 va Y03.
 2. Y02 → "Sinovchi 01", "2 quti kitob" → tasdiqda "Viloyat markazi → B tumani" va "2 quti kitob".
 3. Yuk tavsifi bo'sh yoki faqat bo'shliq → so'rov tasdiqlanmaydi.
 
