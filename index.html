@@ -9,8 +9,24 @@
   <link rel="preload" href="fonts/unbounded-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/onest-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css">
+  <script>
+    // Splash bir seansda bir marta chiqadi
+    try { if (sessionStorage.getItem("bilet006_splash")) document.documentElement.classList.add("no-splash"); } catch (e) {}
+  </script>
 </head>
 <body>
+  <div class="splash" id="splash" aria-hidden="true">
+    <div class="splash-stage">
+      <div class="cube">
+        <span class="face f1"></span><span class="face f2"></span><span class="face f3"></span>
+        <span class="face f4"></span><span class="face f5"></span><span class="face f6"></span>
+      </div>
+      <div class="splash-shadow"></div>
+    </div>
+    <p class="splash-name" data-i18n="brand">Kichik yuk</p>
+    <div class="splash-bar"><span></span></div>
+  </div>
+
   <a class="skip" href="#main" data-i18n="skip">Asosiy qismga o'tish</a>
 
   <header class="nav">

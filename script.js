@@ -472,3 +472,24 @@ if ("IntersectionObserver" in window && !reducedMotion) {
 applyStaticTexts();
 renderAll();
 showScreen(parseRoute(), false);
+
+/* ---------- Splash: bir seansda bir marta, bosish yoki klavish bilan o'tkaziladi ---------- */
+(function splash() {
+  const node = $("splash");
+  const active = node && getComputedStyle(node).display !== "none";
+  const finish = () => {
+    root.classList.add("splash-done");
+    if (node) node.remove();
+    document.removeEventListener("keydown", skip);
+  };
+  function skip() {
+    if (!node.isConnected) return;
+    node.classList.add("skip");
+    setTimeout(finish, 350);
+  }
+  try { sessionStorage.setItem("bilet006_splash", "1"); } catch {}
+  if (!active) return finish();
+  node.addEventListener("click", skip);
+  document.addEventListener("keydown", skip);
+  setTimeout(finish, 2750);
+})();

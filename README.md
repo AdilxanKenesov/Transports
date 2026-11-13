@@ -28,6 +28,7 @@ O'zbekcha (asosiy), ruscha, inglizcha — yuqoridagi UZ / RU / EN tugmalari. Tan
 ## Dizayn va animatsiyalar
 - To'q premium uslub: qora-ko'k fon, sekin suzadigan rangli yog'du, shisha (glass) kartalar, neon chiziqlar.
 - Har tumanning o'z rangi: A — moviy, B — qahrabo, C — binafsha (filtr, kartalar, chipta va tabloda bir xil).
+- Kirishda splash: 3D aylanuvchi yuk qutisi (~2,5 soniya; bosish yoki klavish bilan o'tkaziladi; bir seansda bir marta chiqadi).
 - Bosh sahifada "Yaqin qatnovlar" tablosi (yurib turadigan lenta) va uch qadam.
 - Qatnov → Yuk → Tasdiq qadamlar ko'rsatkichi.
 - Ekranlar orasida silliq o'tish (View Transitions): tanlangan karta so'rov ekranidagi chiptaga aylanadi; filtr almashganda kartalar o'z joyiga siljiydi.
