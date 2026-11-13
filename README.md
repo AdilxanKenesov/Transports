@@ -14,6 +14,13 @@ Kichik yukini jo'natmoqchi bo'lgan foydalanuvchiga mos qatnovni topishga yordam 
 | 4. Ism va yuk tavsifi majburiy | Bo'sh yoki faqat bo'shliqli qiymat rad etiladi, o'zbekcha xato chiqadi |
 | 5. Tasdiq: qatnov, ism, yuk tavsifi | "So'rov qabul qilindi" paneli |
 
+## Dizayn
+- Qatnovlar sxemasi (metro chizmasi uslubida): tanlangan tumanga boradigan yo'llar rangli bo'lib ajraladi. Bu xarita emas, faqat qatnovlar bog'lanishi.
+- Har tumanning o'z rangi: A — ko'k, B — qahrabo, C — binafsha; filtr, sxema va qatnov qatorlarida bir xil.
+- Qatnovlar sana bo'yicha guruhlangan, vaqt katta raqamda, yo'nalish nuqta-chiziq ko'rinishida.
+- Kompyuterda o'ng tomonda yopishqoq "Jo'natma" paneli, telefonda bitta ustun.
+- Shrift: Golos Text (`fonts/` ichida, internetsiz ishlaydi).
+
 Qo'shimcha: yuborilgan so'rovlar va tanlangan filtr brauzerda (`localStorage`) saqlanadi; telefon ekraniga moslashgan.
 
 ## Tekshirish

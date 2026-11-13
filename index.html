@@ -3,64 +3,126 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kichik yukingiz uchun viloyat ichidagi mos qatnovni toping va jo'natish so'rovini qoldiring.">
   <title>Kichik yuk uchun transport topish</title>
+  <link rel="preload" href="fonts/golos-text.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="top">
-    <div class="wrap">
-      <h1>Kichik yuk uchun transport topish</h1>
-      <p class="lead">Kichik yukingizni jo'natish uchun mos qatnovni tanlang va so'rov qoldiring.</p>
+  <a class="skip" href="#qatnovlar">Qatnovlarga o'tish</a>
+
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-text">
+        <h1>Kichik yukingizni yo'lga chiqayotgan qatnov bilan jo'nating</h1>
+        <p class="lead">Manzilni tanlang, mos qatnovni belgilang va yuk haqida qisqa yozing.</p>
+      </div>
+
+      <figure class="scheme" aria-hidden="true">
+        <svg viewBox="0 0 420 250" id="scheme">
+          <defs>
+            <marker id="arr-A" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="var(--line-a)"/></marker>
+            <marker id="arr-B" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="var(--line-b)"/></marker>
+            <marker id="arr-C" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="var(--line-c)"/></marker>
+          </defs>
+
+          <g class="edges">
+            <g class="edge" data-to="A tumani" style="--c: var(--line-a)">
+              <line x1="76" y1="114" x2="214" y2="52" marker-end="url(#arr-A)"/>
+              <text x="132" y="70">Y01</text>
+            </g>
+            <g class="edge" data-to="B tumani" style="--c: var(--line-b)">
+              <line x1="78" y1="125" x2="340" y2="125" marker-end="url(#arr-B)"/>
+              <text x="190" y="145">Y02</text>
+            </g>
+            <g class="edge" data-to="B tumani" style="--c: var(--line-b)">
+              <line x1="262" y1="54" x2="346" y2="108" marker-end="url(#arr-B)"/>
+              <text x="314" y="70">Y03</text>
+            </g>
+            <g class="edge" data-to="C tumani" style="--c: var(--line-c)">
+              <line x1="346" y1="142" x2="264" y2="196" marker-end="url(#arr-C)"/>
+              <text x="314" y="192">Y04</text>
+            </g>
+            <g class="edge" data-to="A tumani" style="--c: var(--line-a)">
+              <line x1="234" y1="188" x2="234" y2="66" marker-end="url(#arr-A)"/>
+              <text x="200" y="104">Y05</text>
+            </g>
+          </g>
+
+          <g class="nodes">
+            <g class="node hub"><circle cx="56" cy="125" r="17"/><text x="56" y="168" text-anchor="middle">Viloyat markazi</text></g>
+            <g class="node" data-place="A tumani" style="--c: var(--line-a)"><circle cx="238" cy="42" r="14"/><text x="238" y="16" text-anchor="middle">A tumani</text></g>
+            <g class="node" data-place="B tumani" style="--c: var(--line-b)"><circle cx="362" cy="125" r="14"/><text x="362" y="160" text-anchor="middle">B tumani</text></g>
+            <g class="node" data-place="C tumani" style="--c: var(--line-c)"><circle cx="238" cy="208" r="14"/><text x="238" y="243" text-anchor="middle">C tumani</text></g>
+          </g>
+        </svg>
+        <figcaption>Qatnovlar sxemasi: tanlangan manzilga boradigan yo'llar ajralib turadi.</figcaption>
+      </figure>
     </div>
   </header>
 
   <main class="wrap">
-    <section aria-labelledby="filtr-sarlavha">
-      <h2 id="filtr-sarlavha">Yetib borish hududi</h2>
-      <div class="filters" id="filters" role="group" aria-label="Yetib borish hududi bo'yicha filtr"></div>
+    <section class="filter-bar" aria-labelledby="filtr-sarlavha">
+      <h2 id="filtr-sarlavha">Yuk qayerga borishi kerak?</h2>
+      <div class="filters" id="filters" role="group" aria-label="Yetib borish hududi"></div>
     </section>
 
-    <section aria-labelledby="qatnov-sarlavha">
-      <h2 id="qatnov-sarlavha">Qatnovlar <span class="count" id="count"></span></h2>
-      <ul class="trips" id="trips"></ul>
-      <p class="empty" id="empty" hidden>Bu hudud uchun qatnov topilmadi.</p>
-    </section>
-
-    <section class="panel" id="formPanel" hidden aria-labelledby="forma-sarlavha">
-      <h2 id="forma-sarlavha">Yuk jo'natish so'rovi</h2>
-      <div class="chosen" id="chosen"></div>
-      <form id="requestForm" novalidate>
-        <label for="name">Ismingiz <span class="req">*</span></label>
-        <input id="name" name="name" type="text" maxlength="60" autocomplete="name" placeholder="Masalan: Sinovchi 01">
-        <p class="error" id="nameError" aria-live="polite"></p>
-
-        <label for="cargo">Yukning qisqa tavsifi <span class="req">*</span></label>
-        <textarea id="cargo" name="cargo" rows="3" maxlength="200" placeholder="Masalan: 2 quti kitob"></textarea>
-        <p class="error" id="cargoError" aria-live="polite"></p>
-
-        <div class="actions">
-          <button type="submit" class="btn primary">So'rovni yuborish</button>
-          <button type="button" class="btn ghost" id="cancelBtn">Bekor qilish</button>
+    <div class="layout">
+      <section id="qatnovlar" class="trips-col" aria-labelledby="qatnov-sarlavha">
+        <div class="col-head">
+          <h2 id="qatnov-sarlavha">Qatnovlar</h2>
+          <p class="count" id="count" aria-live="polite"></p>
         </div>
-      </form>
-    </section>
+        <div id="tripGroups"></div>
+        <p class="empty" id="empty" hidden>Bu manzilga hozircha qatnov yo'q. Boshqa tumanni tanlang.</p>
+      </section>
 
-    <section class="panel success" id="confirmPanel" hidden aria-live="polite" aria-labelledby="tasdiq-sarlavha">
-      <h2 id="tasdiq-sarlavha">✅ So'rov qabul qilindi</h2>
-      <dl class="confirm" id="confirmBody"></dl>
-      <p class="note">Bu sinov loyihasi: haydovchiga haqiqiy xabar yuborilmaydi, so'rov faqat shu brauzerda saqlanadi.</p>
-      <button type="button" class="btn ghost" id="newBtn">Yangi so'rov</button>
-    </section>
+      <aside class="side" aria-label="Jo'natma">
+        <div class="sheet" id="panelEmpty">
+          <h2>Jo'natma</h2>
+          <p class="muted">Ro'yxatdan qatnovni tanlang — shu yerda so'rov shakli ochiladi.</p>
+        </div>
 
-    <section aria-labelledby="tarix-sarlavha">
+        <section class="sheet" id="formPanel" hidden aria-labelledby="forma-sarlavha">
+          <h2 id="forma-sarlavha">Yuk jo'natish so'rovi</h2>
+          <div class="chosen" id="chosen"></div>
+          <form id="requestForm" novalidate>
+            <div class="field">
+              <label for="name">Ismingiz</label>
+              <input id="name" name="name" type="text" maxlength="60" autocomplete="name" required aria-describedby="nameError" placeholder="Masalan, Sinovchi 01">
+              <p class="error" id="nameError"></p>
+            </div>
+            <div class="field">
+              <label for="cargo">Yuk haqida qisqacha</label>
+              <textarea id="cargo" name="cargo" rows="3" maxlength="200" required aria-describedby="cargoError cargoHint" placeholder="Masalan, 2 quti kitob"></textarea>
+              <p class="hint" id="cargoHint">Nima va nechta ekanini yozing.</p>
+              <p class="error" id="cargoError"></p>
+            </div>
+            <div class="actions">
+              <button type="submit" class="btn primary">So'rovni yuborish</button>
+              <button type="button" class="btn quiet" id="cancelBtn">Bekor qilish</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="sheet receipt" id="confirmPanel" hidden tabindex="-1" aria-labelledby="tasdiq-sarlavha">
+          <h2 id="tasdiq-sarlavha">So'rov yuborildi</h2>
+          <dl class="confirm" id="confirmBody"></dl>
+          <p class="note">Bu sinov loyihasi: haydovchiga haqiqiy xabar bormaydi, so'rov faqat shu brauzerda saqlanadi.</p>
+          <button type="button" class="btn quiet" id="newBtn">Yana yuk jo'natish</button>
+        </section>
+      </aside>
+    </div>
+
+    <section class="history-block" aria-labelledby="tarix-sarlavha">
       <h2 id="tarix-sarlavha">Yuborilgan so'rovlar</h2>
       <ul class="history" id="history"></ul>
-      <p class="empty" id="historyEmpty">Hozircha so'rov yo'q.</p>
+      <p class="empty" id="historyEmpty">Hali so'rov yubormadingiz. Qatnovni tanlab, birinchisini yuboring.</p>
     </section>
   </main>
 
   <footer class="wrap foot">
-    <p>Qatnovlar namunaviy ma'lumot. Xarita, GPS, narx hisoblash va haqiqiy band qilish mavjud emas.</p>
+    <p>Qatnovlar namunaviy ma'lumot. Narx hisoblash, yuk sig'imini tekshirish va haqiqiy band qilish bu sinov loyihasida yo'q.</p>
   </footer>
 
   <script src="script.js"></script>
