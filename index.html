@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kichik yuk uchun transport topish</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <h1>Kichik yuk uchun transport topish</h1>
+      <p class="lead">Kichik yukingizni jo'natish uchun mos qatnovni tanlang va so'rov qoldiring.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section aria-labelledby="filtr-sarlavha">
+      <h2 id="filtr-sarlavha">Yetib borish hududi</h2>
+      <div class="filters" id="filters" role="group" aria-label="Yetib borish hududi bo'yicha filtr"></div>
+    </section>
+
+    <section aria-labelledby="qatnov-sarlavha">
+      <h2 id="qatnov-sarlavha">Qatnovlar <span class="count" id="count"></span></h2>
+      <ul class="trips" id="trips"></ul>
+      <p class="empty" id="empty" hidden>Bu hudud uchun qatnov topilmadi.</p>
+    </section>
+
+    <section class="panel" id="formPanel" hidden aria-labelledby="forma-sarlavha">
+      <h2 id="forma-sarlavha">Yuk jo'natish so'rovi</h2>
+      <div class="chosen" id="chosen"></div>
+      <form id="requestForm" novalidate>
+        <label for="name">Ismingiz <span class="req">*</span></label>
+        <input id="name" name="name" type="text" maxlength="60" autocomplete="name" placeholder="Masalan: Sinovchi 01">
+        <p class="error" id="nameError" aria-live="polite"></p>
+
+        <label for="cargo">Yukning qisqa tavsifi <span class="req">*</span></label>
+        <textarea id="cargo" name="cargo" rows="3" maxlength="200" placeholder="Masalan: 2 quti kitob"></textarea>
+        <p class="error" id="cargoError" aria-live="polite"></p>
+
+        <div class="actions">
+          <button type="submit" class="btn primary">So'rovni yuborish</button>
+          <button type="button" class="btn ghost" id="cancelBtn">Bekor qilish</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel success" id="confirmPanel" hidden aria-live="polite" aria-labelledby="tasdiq-sarlavha">
+      <h2 id="tasdiq-sarlavha">✅ So'rov qabul qilindi</h2>
+      <dl class="confirm" id="confirmBody"></dl>
+      <p class="note">Bu sinov loyihasi: haydovchiga haqiqiy xabar yuborilmaydi, so'rov faqat shu brauzerda saqlanadi.</p>
+      <button type="button" class="btn ghost" id="newBtn">Yangi so'rov</button>
+    </section>
+
+    <section aria-labelledby="tarix-sarlavha">
+      <h2 id="tarix-sarlavha">Yuborilgan so'rovlar</h2>
+      <ul class="history" id="history"></ul>
+      <p class="empty" id="historyEmpty">Hozircha so'rov yo'q.</p>
+    </section>
+  </main>
+
+  <footer class="wrap foot">
+    <p>Qatnovlar namunaviy ma'lumot. Xarita, GPS, narx hisoblash va haqiqiy band qilish mavjud emas.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
